@@ -1,10 +1,11 @@
-// pages/Tasks.js
 import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Tasks = () => {
   const [newTask, setNewTask] = useState("");
+  const { logout } = useAuth0();
 
   const tasks = useQuery(api.tasks.get) || [];
   const createTask = useMutation(api.tasks.create);
@@ -57,6 +58,9 @@ const Tasks = () => {
           </li>
         ))}
       </ul>
+      <button onClick={() => logout({ returnTo: window.location.origin })}>
+        Log Out
+      </button>
     </div>
   );
 };
