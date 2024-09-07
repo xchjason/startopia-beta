@@ -1,8 +1,10 @@
+import React, { useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
- 
+
 export function SignIn() {
   const { signIn } = useAuthActions();
-  const [step, setStep] = useState<"signUp" | "signIn">("signIn");
+  const [step, setStep] = useState("signIn");
+
   return (
     <form
       onSubmit={(event) => {
@@ -26,3 +28,5 @@ export function SignIn() {
     </form>
   );
 }
+
+export default SignIn;
