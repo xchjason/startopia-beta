@@ -18,7 +18,6 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <h1>Task Manager</h1>
         <Routes>
           <Route path="/" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
           <Route path="/login" element={<LoginPage />} />

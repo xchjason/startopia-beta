@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import LogoutButton from "../components/LogoutButton";
+import Badge from "../components/Badge"; // Import the Badge component
 
 const Tasks = () => {
   const [newTask, setNewTask] = useState("");
@@ -27,6 +28,7 @@ const Tasks = () => {
   return (
     <div>
       <h1>Task Manager</h1>
+      <Badge /> {/* Add the Badge component here */}
       <div>
         <input
           type="text"
