@@ -11,11 +11,12 @@ export default defineSchema({
   ideas: defineTable({
     user_id: v.string(),
     title: v.string(),
+    description: v.string(), //brief description of the service or product
     problem: v.string(),
-    solution: v.string(), //service or product
+    solution: v.string(),
     category: v.string(),
-    score_id: v.string(),
-    plan_id: v.string(),
+    score_id: v.optional(v.string()),
+    plan_id: v.optional(v.string()),
   }),
   scores: defineTable({
     idea_id: v.string(),

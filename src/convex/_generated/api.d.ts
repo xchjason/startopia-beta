@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as http from "../http.js";
+import type * as ideas from "../ideas.js";
 import type * as llm from "../llm.js";
 import type * as messages from "../messages.js";
 import type * as tasks from "../tasks.js";
@@ -29,6 +30,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   http: typeof http;
+  ideas: typeof ideas;
   llm: typeof llm;
   messages: typeof messages;
   tasks: typeof tasks;
