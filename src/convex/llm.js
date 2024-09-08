@@ -19,9 +19,9 @@ export const generateText = action({
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4", // Use the appropriate chat model
+        model: "gpt-4o-mini",
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 100,
+        max_tokens: 1000,
       })
     });
 
