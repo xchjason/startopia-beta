@@ -12,7 +12,8 @@ export default function Badge() {
       saveUser({
         name: user.name || "unknown",
         email: user.email || "unknown",
-        auth0UserId: user.sub || "unknown"
+        auth0UserId: user.sub || "unknown",
+        saved_ideas: [] // Initialize with an empty array
       });
     }
   }, [user, saveUser]);
