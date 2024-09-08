@@ -1,9 +1,10 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
-import fetch from 'node-fetch';
+import OpenAI from "openai";
 
 // Load environment variables
 const apiKey = process.env.OPENAI_API_KEY;
+const openai = new OpenAI(apiKey);
 
 export const generateText = action({
   args: { prompt: v.string() },
@@ -12,25 +13,12 @@ export const generateText = action({
       throw new Error("Invalid prompt: expected a non-empty string.");
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 1000,
-      })
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1000,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`OpenAI API error: ${errorData.error.message}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
+    return completion.choices[0].message.content;
   }
 });
