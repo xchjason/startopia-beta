@@ -47,7 +47,7 @@ const Content = () => {
         }}
         className="mb-3 text-center text-3xl font-bold leading-tight text-zinc-50 sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight lg:text-7xl lg:leading-tight"
       >
-        Dream Big, Build Now
+        The Time is Now
       </motion.h1>
       <motion.p
         initial={{
@@ -65,7 +65,7 @@ const Content = () => {
         }}
         className="max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed"
       >
-        Still waiting to get your MBA degree? 
+        Unsure about your next venture? 
       </motion.p>
       <motion.p
         initial={{
@@ -83,7 +83,7 @@ const Content = () => {
         }}
         className="max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed"
       >
-        Enter Startopia: build your next startup now
+        Enter Startopia: an entrepreneur's must-have tool
       </motion.p>
     </div>
   );
