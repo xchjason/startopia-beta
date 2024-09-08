@@ -12,8 +12,8 @@ export default defineSchema({
     user_id: v.string(),
     title: v.string(),
     problem: v.string(),
+    solution: v.string(), //service or product
     category: v.string(),
-    description: v.string(),
     score_id: v.string(),
     plan_id: v.string(),
   }),
