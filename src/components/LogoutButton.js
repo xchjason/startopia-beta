@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { SplashButton } from "./buttons/SplashButton"; // Import SplashButton
 
 export default function LogoutButton() {
   const { logout } = useAuth0();
@@ -12,8 +13,8 @@ export default function LogoutButton() {
   };
 
   return (
-    <button onClick={handleLogout}>
+    <SplashButton onClick={handleLogout}>
       Log out
-    </button>
+    </SplashButton>
   );
 }
