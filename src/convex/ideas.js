@@ -77,7 +77,10 @@ export const deleteIdea = mutation({
 export const getIdeasByUser = query({
   args: { user_id: v.string() },
   handler: async (ctx, { user_id }) => {
-    return await ctx.db.query("ideas").filter({ user_id }).collect();
+
+    const ideas = await ctx.db.query("ideas").filter(q => q.eq(q.field("user_id"), user_id)).collect();
+    
+    return ideas;
   }
 });
 
@@ -86,5 +89,13 @@ export const getIdeaById = query({
   args: { ideaId: v.id("ideas") },
   handler: async (ctx, { ideaId }) => {
     return await ctx.db.get(ideaId);
+  }
+});
+
+export const getAllIdeas = query({
+  handler: async (ctx) => {
+    const ideas = await ctx.db.query("ideas").collect();
+    console.log(`All ideas: ${JSON.stringify(ideas)}`);
+    return ideas;
   }
 });
