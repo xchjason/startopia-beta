@@ -16,8 +16,6 @@ export default defineSchema({
     description: v.string(),
     score_id: v.string(),
     plan_id: v.string(),
-    created_at: v.number(),
-    updated_at: v.number(),
   }),
   scores: defineTable({
     idea_id: v.string(),
@@ -30,7 +28,6 @@ export default defineSchema({
       profitability: v.number(),
     }),
     generated_by: v.string(),
-    created_at: v.number(),
   }),
   plans: defineTable({
     idea_id: v.string(),
@@ -38,6 +35,5 @@ export default defineSchema({
     talent: v.string(),
     finance: v.string(),
     legal: v.string(),
-    created_at: v.number(),
   }),
 });
