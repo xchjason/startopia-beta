@@ -43,8 +43,13 @@ const IdeaCard = ({
     }
   };
 
+  const truncateDescription = (text, maxLength = 180) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
+  };
+
   return (
-    <div className="group relative mx-auto max-h-fit w-full max-w-sm overflow-hidden rounded-lg transition-all duration-300 hover:scale-[1.01]">
+    <div className="group relative mx-auto w-full max-w-sm overflow-hidden rounded-lg transition-all duration-300 hover:scale-[1.01]">
       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <Card sx={{
         bgcolor: 'rgba(30, 41, 59, 0.8)',
@@ -56,20 +61,42 @@ const IdeaCard = ({
         transition: 'all 0.3s ease',
         border: '1px solid transparent',
         margin: '1px',
+        height: expanded ? 'auto' : '250px', // Fixed height when not expanded
+        display: 'flex',
+        flexDirection: 'column',
         '&:hover': {
           boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
         }
       }}>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
-            {idea.title}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: 'rgb(148 163 184)' }}>
-            {idea.description}
-          </Typography>
+        <CardContent sx={{ 
+          p: 4, 
+          flexGrow: 1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
+              {idea.title}
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                mb: 2, 
+                color: 'rgb(148 163 184)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 4,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {expanded ? idea.description : truncateDescription(idea.description)}
+            </Typography>
+          </div>
           {(showSaveButton || showExpandOption) && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 'auto' }}>
               {showSaveButton && (
                 <Button 
                   size="small" 
