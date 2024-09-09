@@ -6,8 +6,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile"; // Import Profile component
 import { NavBar } from "./components/navbar/NavBar"; // Import NavBar component
 import Create from "./pages/Create"; // Import Create component
-import Judge from "./pages/Judge"; // Import Judge component
-import Browse from "./pages/Browse"; // Import Browse component
+import Portfolio from "./pages/Portfolio"; // Import Portfolio component
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -34,10 +33,9 @@ const AppRoutes = ({ isAuthenticated }) => (
         </ProtectedRoute>
       }
     />
-    {/* Add new routes for Create, Judge, and Browse */}
+    {/* Add new routes for Create and Portfolio */}
     <Route path="/create" element={<Create />} />
-    <Route path="/judge" element={<Judge />} />
-    <Route path="/browse" element={<Browse />} />
+    <Route path="/portfolio" element={<Portfolio />} />
   </Routes>
 );
 

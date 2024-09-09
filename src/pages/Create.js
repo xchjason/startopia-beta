@@ -71,7 +71,7 @@ const Create = () => {
           <Paper elevation={3} sx={{ p: 3, bgcolor: 'rgba(255, 255, 255, 0.05)' }}>
             <TextField
               fullWidth
-              label="Problem Statement"
+              label="Idea Statement"
               value={problem}
               onChange={(e) => setProblem(e.target.value)}
               margin="normal"
@@ -79,7 +79,7 @@ const Create = () => {
               rows={4}
               sx={inputStyles}
             />
-            <Button onClick={() => setProblem("AI-generated problem statement (placeholder)")} variant="outlined" color="primary" sx={{ mt: 1 }}>
+            <Button onClick={() => setProblem("AI-generated idea statement (placeholder)")} variant="outlined" color="primary" sx={{ mt: 1 }}>
               Generate Problem with AI
             </Button>
           </Paper>

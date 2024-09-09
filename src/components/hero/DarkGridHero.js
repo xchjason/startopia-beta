@@ -29,7 +29,7 @@ const Content = () => {
         }}
         className="relative"
       >
-        <GlowingChip>Startopia: An AI-powered Startup Incubator ✨</GlowingChip>
+        <GlowingChip>Startopia: the Ultimate Startup Incubator ✨</GlowingChip>
       </motion.div>
       <motion.h1
         initial={{
@@ -83,7 +83,7 @@ const Content = () => {
         }}
         className="max-w-2xl text-center text-base leading-relaxed text-zinc-400 sm:text-lg md:text-lg md:leading-relaxed"
       >
-        Enter Startopia: an entrepreneur's must-have tool
+        Enter Startopia: an entrepreneur's must-have AI coach
       </motion.p>
     </div>
   );
