@@ -15,7 +15,7 @@ export const NavLink = ({ children, external, to = "/home" }) => {
   return (
     <a
       href={external ? to : "#"}
-      rel="nofollow"
+      rel={external ? "nofollow noreferrer" : "nofollow"} // Add noreferrer for external links
       target={external ? "_blank" : undefined}
       onClick={handleClick}
       className="group flex items-center gap-0.5 text-m font-semibold text-zinc-200 transition-colors hover:text-zinc-50 sm:text-sm"
