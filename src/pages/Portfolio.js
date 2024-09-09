@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useQuery } from 'convex/react'; // Ensure this path is correct
 import { api } from '../convex/_generated/api';
 import IdeaCard from '../components/idea/IdeaCard';
@@ -9,7 +9,8 @@ const Portfolio = () => {
   const { user } = useAuth0(); // Get the user object from Auth0
   const userId = user?.sub; // Assuming the user ID is stored in the 'sub' field
 
-  const ideas = useQuery(api.ideas.getIdeasByUser, { user_id: userId }) || [];
+  const ideasQuery = useQuery(api.ideas.getIdeasByUser, { user_id: userId });
+  const ideas = useMemo(() => ideasQuery || [], [ideasQuery]);
   const [sortedIdeas, setSortedIdeas] = useState([]);
 
   useEffect(() => {
