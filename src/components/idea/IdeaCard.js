@@ -44,12 +44,16 @@ const IdeaCard = ({
     }
   };
 
-  const truncateDescription = (text, maxLength = 180) => {
+  const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) return text;
     return text.slice(0, maxLength) + '...';
   };
 
+  const truncateDescription = (text) => truncateText(text, 180);
+  const truncateTitle = (text) => truncateText(text, 55);
+
   const isDescriptionTruncated = idea.description.length > 180;
+  const isTitleTruncated = idea.title.length > 55;
 
   return (
     <div className="group relative mx-auto w-full max-w-sm overflow-hidden rounded-lg transition-all duration-300 hover:scale-[1.01]">
@@ -64,7 +68,7 @@ const IdeaCard = ({
         transition: 'all 0.3s ease',
         border: '1px solid transparent',
         margin: '1px',
-        height: expanded ? 'auto' : '270px', // Fixed height when not expanded
+        height: expanded ? 'auto' : '273px', // Fixed height when not expanded
         display: 'flex',
         flexDirection: 'column',
         '&:hover': {
@@ -80,9 +84,17 @@ const IdeaCard = ({
           justifyContent: 'space-between'
         }}>
           <div>
-            <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
-              {idea.title}
-            </Typography>
+            {isTitleTruncated ? (
+              <Tooltip title={idea.title} arrow placement="top">
+                <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white', cursor: 'pointer' }}>
+                  {truncateTitle(idea.title)}
+                </Typography>
+              </Tooltip>
+            ) : (
+              <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
+                {idea.title}
+              </Typography>
+            )}
             {isDescriptionTruncated && !expanded ? (
               <Tooltip title={idea.description} arrow placement="top">
                 <Typography 
