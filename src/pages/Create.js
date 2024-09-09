@@ -11,7 +11,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react"; 
 import { api } from "../convex/_generated/api";
 import IdeaCard from "../components/idea/IdeaCard";
 
@@ -25,6 +25,7 @@ const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const generateIdeas = useAction(api.llm.generateIdeas);
+  const createIdea = useMutation(api.ideas.createIdea); // Use useMutation for createIdea
 
   const handleGenerate = async () => {
     if (!problem) {
@@ -58,10 +59,23 @@ const Create = () => {
     }
   };
 
-  const handleSave = (idea) => {
-    // Placeholder for saving the idea to the database
-    console.log("Saving idea:", idea);
-    alert(`Idea "${idea.title}" saved successfully!`);
+  const handleSave = async (idea) => {
+    try {
+      await createIdea({
+        user_id: user.sub,
+        title: idea.title,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+        category: idea.category,
+        score_id: idea.score_id || "",
+        plan_id: idea.plan_id || ""
+      });
+      alert(`Idea "${idea.title}" saved successfully!`);
+    } catch (error) {
+      console.error("Error saving idea:", error);
+      alert("An error occurred while saving the idea. Please try again.");
+    }
   };
 
   const inputStyles = {
