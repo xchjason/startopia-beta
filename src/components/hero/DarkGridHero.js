@@ -29,7 +29,7 @@ const Content = () => {
         }}
         className="relative"
       >
-        <GlowingChip>Startopia: the Ultimate Startup Incubator ✨</GlowingChip>
+        <GlowingChip>The Ultimate Startup Incubator ✨</GlowingChip>
       </motion.div>
       <motion.h1
         initial={{
