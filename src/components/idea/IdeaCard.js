@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,6 +49,8 @@ const IdeaCard = ({
     return text.slice(0, maxLength) + '...';
   };
 
+  const isDescriptionTruncated = idea.description.length > 180;
+
   return (
     <div className="group relative mx-auto w-full max-w-sm overflow-hidden rounded-lg transition-all duration-300 hover:scale-[1.01]">
       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -80,20 +83,40 @@ const IdeaCard = ({
             <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
               {idea.title}
             </Typography>
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                mb: 2, 
-                color: 'rgb(148 163 184)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: 'vertical',
-              }}
-            >
-              {expanded ? idea.description : truncateDescription(idea.description)}
-            </Typography>
+            {isDescriptionTruncated && !expanded ? (
+              <Tooltip title={idea.description} arrow placement="top">
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    mb: 2, 
+                    color: 'rgb(148 163 184)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 4,
+                    WebkitBoxOrient: 'vertical',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {truncateDescription(idea.description)}
+                </Typography>
+              </Tooltip>
+            ) : (
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  mb: 2, 
+                  color: 'rgb(148 163 184)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: 'vertical',
+                }}
+              >
+                {idea.description}
+              </Typography>
+            )}
           </div>
           {(showSaveButton || showExpandOption) && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 'auto' }}>
