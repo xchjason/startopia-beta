@@ -8,21 +8,19 @@ import {
   Slider,
   Grid,
   Paper,
-  Card,
-  CardContent,
-  CardActions,
   CircularProgress
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
+import IdeaCard from "../components/idea/IdeaCard";
 
 const Create = () => {
   const { user } = useAuth0();
   const [problem, setProblem] = useState("");
-  const [technicalComplexity, setTechnicalComplexity] = useState(50);
-  const [marketSize, setMarketSize] = useState(50);
-  const [initialFunding, setInitialFunding] = useState(50);
+  const [technicalComplexity, setTechnicalComplexity] = useState(5);
+  const [marketSize, setMarketSize] = useState(5);
+  const [initialFunding, setInitialFunding] = useState(5);
   const [ideas, setIdeas] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,10 +37,10 @@ const Create = () => {
       const generatedIdeas = await generateIdeas({
         prompt: `Generate 3 startup ideas based on the following problem statement and criteria:
           Problem: ${problem}
-          Technical Complexity: ${technicalComplexity}%
-          Market Size: ${marketSize}%
-          Initial Funding: ${initialFunding}%`,
-        user_id: user.sub // Assuming user.sub is the Auth0 user ID
+          Technical Complexity: ${technicalComplexity} out of 10
+          Market Size: ${marketSize} out of 10
+          Initial Funding Requirement: ${initialFunding} out of 10`,
+        user_id: user.sub
       });
 
       setIdeas(generatedIdeas);
@@ -120,6 +118,9 @@ const Create = () => {
                 onChange={(e, newValue) => setTechnicalComplexity(newValue)}
                 aria-labelledby="technical-complexity-slider"
                 valueLabelDisplay="auto"
+                marks
+                min={0}
+                max={10}
                 sx={{ color: 'white' }}
               />
             </Box>
@@ -130,6 +131,9 @@ const Create = () => {
                 onChange={(e, newValue) => setMarketSize(newValue)}
                 aria-labelledby="market-size-slider"
                 valueLabelDisplay="auto"
+                marks
+                min={0}
+                max={10}
                 sx={{ color: 'white' }}
               />
             </Box>
@@ -140,6 +144,9 @@ const Create = () => {
                 onChange={(e, newValue) => setInitialFunding(newValue)}
                 aria-labelledby="initial-funding-slider"
                 valueLabelDisplay="auto"
+                marks
+                min={0}
+                max={10}
                 sx={{ color: 'white' }}
               />
             </Box>
@@ -164,30 +171,7 @@ const Create = () => {
           <Grid container spacing={3}>
             {ideas.map((idea, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Card sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', color: 'white' }}>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      {idea.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Description: {idea.description}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Problem: {idea.problem}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Solution: {idea.solution}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Category: {idea.category}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" onClick={() => handleSave(idea)} sx={{ color: 'white' }}>
-                      Save Idea
-                    </Button>
-                  </CardActions>
-                </Card>
+                <IdeaCard idea={idea} onSave={handleSave} />
               </Grid>
             ))}
           </Grid>
