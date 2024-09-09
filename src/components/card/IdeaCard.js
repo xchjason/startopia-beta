@@ -68,7 +68,7 @@ const IdeaCard = ({
         transition: 'all 0.3s ease',
         border: '1px solid transparent',
         margin: '1px',
-        height: expanded ? 'auto' : '273px', // Fixed height when not expanded
+        height: expanded ? 'auto' : '260px', // Fixed height when not expanded
         display: 'flex',
         flexDirection: 'column',
         '&:hover': {
