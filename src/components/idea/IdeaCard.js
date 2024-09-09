@@ -30,49 +30,76 @@ const IdeaCard = ({ idea, onSave }) => {
   };
 
   return (
-    <Card sx={{ 
-      bgcolor: 'rgba(255, 255, 255, 0.05)', 
-      color: 'white',
-      borderRadius: 2,
-      '&:hover': {
-        boxShadow: '0 0 10px rgba(255, 255, 255, 0.2)',
-      }
-    }}>
-      <CardContent>
-        <Typography variant="h6" component="div" sx={{ mb: 2 }}>
-          {idea.title}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          {idea.description}
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Button size="small" onClick={() => onSave(idea)} sx={{ color: 'primary.main' }}>
-            Save Idea
-          </Button>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon sx={{ color: 'white' }} />
-          </ExpandMore>
-        </Box>
-      </CardContent>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Problem:</Typography>
-          <Typography paragraph sx={{ pl: 2 }}>
-            {idea.problem}
+    <div className="group relative mx-auto max-h-fit w-full max-w-sm overflow-hidden rounded-lg transition-all duration-300 hover:scale-[1.01]">
+      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <Card sx={{
+        bgcolor: 'rgba(30, 41, 59, 0.8)',
+        color: 'white',
+        borderRadius: 2,
+        position: 'relative',
+        zIndex: 10,
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        border: '1px solid transparent',
+        margin: '1px',
+        '&:hover': {
+          boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+        }
+      }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
+            {idea.title}
           </Typography>
-          <Typography paragraph>Solution:</Typography>
-          <Typography paragraph sx={{ pl: 2 }}>
-            {idea.solution}
+          <Typography variant="body2" sx={{ mb: 2, color: 'rgb(148 163 184)' }}>
+            {idea.description}
           </Typography>
-          <Typography>Category: {idea.category}</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Button 
+              size="small" 
+              onClick={() => onSave(idea)} 
+              sx={{ 
+                color: 'rgb(99 102 241)', 
+                border: '1px solid rgb(99 102 241)',
+                borderRadius: '4px',
+                padding: '4px 10px',
+                transition: 'border-color 0.3s ease',
+                '&:hover': { 
+                  borderColor: 'rgb(129 140 248)',
+                  backgroundColor: 'transparent',
+                } 
+              }}
+            >
+              Save Idea
+            </Button>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon sx={{ color: 'white' }} />
+            </ExpandMore>
+          </Box>
         </CardContent>
-      </Collapse>
-    </Card>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography paragraph color="white">Problem:</Typography>
+            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+              {idea.problem}
+            </Typography>
+            <Typography paragraph color="white">Solution:</Typography>
+            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+              {idea.solution}
+            </Typography>
+            <Typography paragraph color="white">Category:</Typography>
+            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+              {idea.category}
+            </Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
+    </div>
   );
 };
 
