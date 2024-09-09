@@ -22,11 +22,25 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const IdeaCard = ({ idea, onSave }) => {
-  const [expanded, setExpanded] = useState(false);
+const IdeaCard = ({ 
+  idea, 
+  onSave, 
+  showSaveButton = true, 
+  showExpandOption = true,
+  expanded: controlledExpanded,
+  onExpandChange
+}) => {
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  
+  const isControlled = controlledExpanded !== undefined;
+  const expanded = isControlled ? controlledExpanded : internalExpanded;
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    if (isControlled) {
+      onExpandChange(!expanded);
+    } else {
+      setInternalExpanded(!internalExpanded);
+    }
   };
 
   return (
@@ -54,50 +68,58 @@ const IdeaCard = ({ idea, onSave }) => {
           <Typography variant="body2" sx={{ mb: 2, color: 'rgb(148 163 184)' }}>
             {idea.description}
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Button 
-              size="small" 
-              onClick={() => onSave(idea)} 
-              sx={{ 
-                color: 'rgb(99 102 241)', 
-                border: '1px solid rgb(99 102 241)',
-                borderRadius: '4px',
-                padding: '4px 10px',
-                transition: 'border-color 0.3s ease',
-                '&:hover': { 
-                  borderColor: 'rgb(129 140 248)',
-                  backgroundColor: 'transparent',
-                } 
-              }}
-            >
-              Save Idea
-            </Button>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon sx={{ color: 'white' }} />
-            </ExpandMore>
-          </Box>
+          {(showSaveButton || showExpandOption) && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {showSaveButton && (
+                <Button 
+                  size="small" 
+                  onClick={() => onSave(idea)} 
+                  sx={{ 
+                    color: 'rgb(99 102 241)', 
+                    border: '1px solid rgb(99 102 241)',
+                    borderRadius: '4px',
+                    padding: '4px 10px',
+                    transition: 'border-color 0.3s ease',
+                    '&:hover': { 
+                      borderColor: 'rgb(129 140 248)',
+                      backgroundColor: 'transparent',
+                    } 
+                  }}
+                >
+                  Save Idea
+                </Button>
+              )}
+              {showExpandOption && (
+                <ExpandMore
+                  expand={expanded}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon sx={{ color: 'white' }} />
+                </ExpandMore>
+              )}
+            </Box>
+          )}
         </CardContent>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography paragraph color="white">Problem:</Typography>
-            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
-              {idea.problem}
-            </Typography>
-            <Typography paragraph color="white">Solution:</Typography>
-            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
-              {idea.solution}
-            </Typography>
-            <Typography paragraph color="white">Category:</Typography>
-            <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
-              {idea.category}
-            </Typography>
-          </CardContent>
-        </Collapse>
+        {showExpandOption && (
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography paragraph color="white">Problem:</Typography>
+              <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+                {idea.problem}
+              </Typography>
+              <Typography paragraph color="white">Solution:</Typography>
+              <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+                {idea.solution}
+              </Typography>
+              <Typography paragraph color="white">Category:</Typography>
+              <Typography paragraph sx={{ pl: 2, color: 'rgb(148 163 184)' }}>
+                {idea.category}
+              </Typography>
+            </CardContent>
+          </Collapse>
+        )}
       </Card>
     </div>
   );
