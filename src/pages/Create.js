@@ -1,6 +1,21 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box, Slider, Grid, Paper, Card, CardContent, CardActions } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Slider,
+  Grid,
+  Paper,
+  Card,
+  CardContent,
+  CardActions,
+  CircularProgress
+} from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useAction } from "convex/react";
+import { api } from "../convex/_generated/api";
 
 const Create = () => {
   const { user } = useAuth0();
@@ -8,37 +23,47 @@ const Create = () => {
   const [technicalComplexity, setTechnicalComplexity] = useState(50);
   const [marketSize, setMarketSize] = useState(50);
   const [initialFunding, setInitialFunding] = useState(50);
-  const [solutions, setSolutions] = useState([]);
+  const [ideas, setIdeas] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePreview = () => {
-    // Placeholder for AI-generated solutions
-    const dummySolutions = [
-      {
-        id: 1,
-        title: "AI-Powered Recycling Assistant",
-        description: "An app that uses computer vision to help users properly sort their recyclables.",
-        category: "Environmental Technology",
-      },
-      {
-        id: 2,
-        title: "Personalized Nutrition Planner",
-        description: "A platform that creates custom meal plans based on individual health data and goals.",
-        category: "Health Tech",
-      },
-      {
-        id: 3,
-        title: "Virtual Reality Language Immersion",
-        description: "A VR application that provides immersive language learning experiences in virtual environments.",
-        category: "EdTech",
-      },
-    ];
-    setSolutions(dummySolutions);
+  const generateIdeas = useAction(api.llm.generateIdeas);
+
+  const handleGenerate = async () => {
+    if (!problem) {
+      alert("Please enter an idea statement.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const generatedIdeas = await generateIdeas({
+        prompt: `Generate 3 startup ideas based on the following problem statement and criteria:
+          Problem: ${problem}
+          Technical Complexity: ${technicalComplexity}%
+          Market Size: ${marketSize}%
+          Initial Funding: ${initialFunding}%`,
+        user_id: user.sub // Assuming user.sub is the Auth0 user ID
+      });
+
+      setIdeas(generatedIdeas);
+    } catch (error) {
+      console.error("Error generating ideas:", error);
+      if (error.message.includes("Expected 3 ideas")) {
+        alert("The AI didn't generate the expected number of ideas. Please try again.");
+      } else if (error.message.includes("Zod")) {
+        alert("The generated ideas did not match the expected format. Please try again or contact support if the issue persists.");
+      } else {
+        alert("An error occurred while generating ideas. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSave = (solution) => {
+  const handleSave = (idea) => {
     // Placeholder for saving the idea to the database
-    console.log("Saving idea:", solution);
-    alert(`Idea "${solution.title}" saved successfully!`);
+    console.log("Saving idea:", idea);
+    alert(`Idea "${idea.title}" saved successfully!`);
   };
 
   const inputStyles = {
@@ -63,8 +88,13 @@ const Create = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 8, color: 'white' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Generate a New Idea
+      <Typography 
+        variant="h5" 
+        component="h1" 
+        gutterBottom 
+        sx={{ textAlign: 'center', mb: 4 }}
+      >
+        Create
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
@@ -79,9 +109,6 @@ const Create = () => {
               rows={4}
               sx={inputStyles}
             />
-            <Button onClick={() => setProblem("AI-generated idea statement (placeholder)")} variant="outlined" color="primary" sx={{ mt: 1 }}>
-              Generate Problem with AI
-            </Button>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -119,33 +146,44 @@ const Create = () => {
           </Paper>
         </Grid>
       </Grid>
-      <Box mt={3}>
-        <Button onClick={handlePreview} variant="contained" color="primary">
-          Preview Solutions
+      <Box mt={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button 
+          onClick={handleGenerate} 
+          variant="contained" 
+          color="primary"
+          disabled={isLoading}
+        >
+          {isLoading ? <CircularProgress size={24} /> : "Generate Ideas"}
         </Button>
       </Box>
-      {solutions.length > 0 && (
+      {ideas.length > 0 && (
         <Box mt={4}>
-          <Typography variant="h5" gutterBottom>
-            Generated Solutions
+          <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
+            Generated Ideas
           </Typography>
           <Grid container spacing={3}>
-            {solutions.map((solution) => (
-              <Grid item xs={12} md={4} key={solution.id}>
+            {ideas.map((idea, index) => (
+              <Grid item xs={12} md={4} key={index}>
                 <Card sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', color: 'white' }}>
                   <CardContent>
                     <Typography variant="h6" component="div">
-                      {solution.title}
+                      {idea.title}
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 1 }}>
-                      {solution.description}
+                      Description: {idea.description}
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 1 }}>
-                      Category: {solution.category}
+                      Problem: {idea.problem}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      Solution: {idea.solution}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      Category: {idea.category}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={() => handleSave(solution)} sx={{ color: 'white' }}>
+                    <Button size="small" onClick={() => handleSave(idea)} sx={{ color: 'white' }}>
                       Save Idea
                     </Button>
                   </CardActions>
