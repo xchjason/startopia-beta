@@ -17,6 +17,11 @@ const IdeaSchema = z.object({
   category: z.string(),
 });
 
+// Define the array of ideas schema without length constraint
+const IdeasArraySchema = z.object({
+  ideas: z.array(IdeaSchema)
+});
+
 export const generateText = action({
   args: { prompt: v.string() },
   handler: async (_, { prompt }) => {
@@ -33,8 +38,8 @@ export const generateText = action({
   }
 });
 
-// New function to generate idea JSON
-export const generateIdea = action({
+// Updated function to generate multiple idea JSONs using structured output
+export const generateIdeas = action({
   args: { prompt: v.string(), user_id: v.string() },
   handler: async (_, { prompt, user_id }) => {
     if (!prompt || typeof prompt !== 'string') {
@@ -48,23 +53,24 @@ export const generateIdea = action({
     const completion = await openai.beta.chat.completions.parse({
       model: "gpt-4o-mini-2024-07-18",
       messages: [
-        { role: "system", content: "Generate a startup idea based on the given statement." },
+        { role: "system", content: "Generate exactly 3 different startup ideas based on the given statement. Provide these ideas in an array named 'ideas'." },
         { role: "user", content: prompt },
       ],
-      response_format: zodResponseFormat(IdeaSchema, "idea"),
+      response_format: zodResponseFormat(IdeasArraySchema, "ideas"),
     });
 
-    const idea = completion.choices[0].message.parsed;
+    const { ideas } = completion.choices[0].message.parsed;
 
-    return {
+    // Ensure we have exactly 3 ideas
+    if (ideas.length !== 3) {
+      throw new Error(`Expected 3 ideas, but received ${ideas.length}`);
+    }
+
+    return ideas.map(idea => ({
       user_id: user_id,
-      title: idea.title,
-      description: idea.description,
-      problem: idea.problem,
-      solution: idea.solution,
-      category: idea.category,
+      ...idea,
       score_id: "", // Optional field
       plan_id: "",  // Optional field
-    };
+    }));
   }
 });
