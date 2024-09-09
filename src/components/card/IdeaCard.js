@@ -68,7 +68,7 @@ const IdeaCard = ({
         transition: 'all 0.3s ease',
         border: '1px solid transparent',
         margin: '1px',
-        height: expanded ? 'auto' : '260px', // Fixed height when not expanded
+        height: expanded ? 'auto' : '240px', // Fixed height when not expanded
         display: 'flex',
         flexDirection: 'column',
         '&:hover': {
@@ -91,11 +91,11 @@ const IdeaCard = ({
                 </Typography>
               </Tooltip>
             ) : (
-              <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white' }}>
+              <Typography variant="h6" component="div" sx={{ mb: 2, color: 'white', cursor: 'pointer' }}>
                 {idea.title}
               </Typography>
             )}
-            {isDescriptionTruncated && !expanded ? (
+            {isDescriptionTruncated ? (
               <Tooltip title={idea.description} arrow placement="top">
                 <Typography 
                   variant="body2" 
@@ -110,7 +110,7 @@ const IdeaCard = ({
                     cursor: 'pointer',
                   }}
                 >
-                  {truncateDescription(idea.description)}
+                  {expanded ? idea.description : truncateDescription(idea.description)}
                 </Typography>
               </Tooltip>
             ) : (
@@ -124,6 +124,7 @@ const IdeaCard = ({
                   display: '-webkit-box',
                   WebkitLineClamp: 4,
                   WebkitBoxOrient: 'vertical',
+                  cursor: 'pointer',
                 }}
               >
                 {idea.description}

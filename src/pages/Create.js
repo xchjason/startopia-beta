@@ -40,7 +40,13 @@ const Create = () => {
           Problem: ${problem}
           Technical Complexity: ${technicalComplexity} out of 10
           Market Size: ${marketSize} out of 10
-          Initial Funding Requirement: ${initialFunding} out of 10`,
+          Initial Funding Requirement: ${initialFunding} out of 10
+          
+          For each idea:
+          - keep the title short
+          - Keep the description concise 
+          - Provide a detailed explanation of the problem 
+          - Offer a comprehensive solution`,
         user_id: user.sub
       });
 
