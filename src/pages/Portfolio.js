@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useQuery } from 'convex/react'; // Ensure this path is correct
 import { api } from '../convex/_generated/api';
-import IdeaCard from '../components/idea/IdeaCard';
+import IdeaCard from '../components/card/IdeaCard';
 import { CircularProgress, Box, Typography, Grid } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react'; // Assuming you're using Auth0 for authentication
 

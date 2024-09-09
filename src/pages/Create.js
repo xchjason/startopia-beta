@@ -13,7 +13,7 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAction, useMutation } from "convex/react"; 
 import { api } from "../convex/_generated/api";
-import IdeaCard from "../components/idea/IdeaCard";
+import IdeaCard from "../components/card/IdeaCard";
 
 const Create = () => {
   const { user } = useAuth0();
