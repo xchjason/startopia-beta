@@ -10,7 +10,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
-import HoverCard from '../HoverCard';
+import HoverCard from '../card/HoverCard';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;

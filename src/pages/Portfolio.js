@@ -36,7 +36,8 @@ const Portfolio = () => {
         <Grid container spacing={3} justifyContent="center">
           {sortedIdeas.map((idea) => (
             <Grid item xs={12} sm={6} md={4} key={idea._id}>
-              <IdeaCard idea={idea} showSaveButton={false} />
+              {/* Set showExpandOption to false to disable the expander */}
+              <IdeaCard idea={idea} showSaveButton={false} showExpandOption={false} />
             </Grid>
           ))}
         </Grid>
