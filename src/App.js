@@ -7,7 +7,7 @@ import Profile from "./pages/Profile";
 import { NavBar } from "./components/navbar/NavBar";
 import Create from "./pages/Create";
 import Portfolio from "./pages/Portfolio";
-import IdeaPage from "./pages/IdeaPage"; // Import the new IdeaPage component
+import IdeaPage from "./pages/IdeaPage";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -36,7 +36,7 @@ const AppRoutes = ({ isAuthenticated }) => (
     />
     <Route path="/create" element={<Create />} />
     <Route path="/portfolio" element={<Portfolio />} />
-    <Route path="/idea/:id" element={<IdeaPage />} /> {/* Add new route for IdeaPage */}
+    <Route path="/idea/:id" element={<IdeaPage />} />
   </Routes>
 );
 

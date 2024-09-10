@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Container, Typography, Button, Card, CardContent, Grid, Box, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useQuery } from 'convex/react';
+import { api } from '../convex/_generated/api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const mockIdea = {
-  title: "AI-Powered Personal Fitness Coach",
-  description: "A mobile app that uses AI to create personalized workout plans and provide real-time feedback.",
-  problem: "Many people struggle to create effective workout routines and maintain proper form during exercises.",
-  solution: "Our app uses computer vision and machine learning to analyze user movements and provide instant feedback, along with personalized workout plans.",
-  category: "Health & Fitness"
-};
-
 const IdeaPage = () => {
+  const { id } = useParams(); // Extract ideaId from URL
   const [scores, setScores] = useState(null);
   const [plans, setPlans] = useState(null);
+
+  const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
 
   const evaluateIdea = () => {
     const mockScores = {
@@ -52,22 +50,34 @@ const IdeaPage = () => {
     Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 
     null;
 
+  if (!id) {
+    return <Typography>No idea selected</Typography>;
+  }
+
+  if (idea === undefined) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (idea === null) {
+    return <Typography>Idea not found</Typography>;
+  }
+
   return (
     <Container maxWidth="md" style={{ marginTop: '64px' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        {mockIdea.title}
+        {idea.title}
       </Typography>
       <Typography variant="body1" paragraph>
-        <strong>Description:</strong> {mockIdea.description}
+        <strong>Description:</strong> {idea.description}
       </Typography>
       <Typography variant="body1" paragraph>
-        <strong>Problem:</strong> {mockIdea.problem}
+        <strong>Problem:</strong> {idea.problem}
       </Typography>
       <Typography variant="body1" paragraph>
-        <strong>Solution:</strong> {mockIdea.solution}
+        <strong>Solution:</strong> {idea.solution}
       </Typography>
       <Typography variant="body1" paragraph>
-        <strong>Category:</strong> {mockIdea.category}
+        <strong>Category:</strong> {idea.category}
       </Typography>
 
       <Box my={4}>
