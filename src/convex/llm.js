@@ -120,16 +120,14 @@ const ScoreSchema = z.object({
       Problem: ${args.problem}
       Solution: ${args.solution}
       Category: ${args.category}
-  
+
       Please provide scores (0-10) and explanations for the following criteria:
       1. Innovation
       2. Market Fit
       3. Feasibility
       4. Scalability
-      5. Profitability
-  
-      Also, calculate an overall score as the average of these 5 scores.`;
-  
+       5. Profitability`;
+
       const completion = await openai.beta.chat.completions.parse({
         model: "gpt-4o-mini-2024-07-18",
         messages: [
@@ -138,13 +136,20 @@ const ScoreSchema = z.object({
         ],
         response_format: zodResponseFormat(ScoreSchema, "evaluation"),
       });
-  
+
       const { evaluation } = completion.choices[0].message.parsed;
       
-      // Add the idea_id to the score object
+      // Calculate the overall score as the average of the 5 criteria scores
+      const criteriaScores = Object.values(evaluation.criteria_scores).filter(score => typeof score === 'number');
+      const overallScore = criteriaScores.reduce((sum, score) => sum + score, 0) / criteriaScores.length;
+
+      // Add the idea_id and calculated overall_score to the score object
       return {
         idea_id: args.idea_id,
-        ...evaluation,
+        evaluation: {
+          ...evaluation,
+          overall_score: Number(overallScore.toFixed(1)), // Round to 2 decimal places
+        },
       };
     },
   });
