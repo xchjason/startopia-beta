@@ -23,12 +23,16 @@ export default defineSchema({
     overall_score: v.number(),
     criteria_scores: v.object({
       innovation: v.number(),
+      innovation_explanation: v.string(), // explanation for innovation score
       market_fit: v.number(),
+      market_fit_explanation: v.string(), // explanation for market fit score
       feasibility: v.number(),
+      feasibility_explanation: v.string(), // explanation for feasibility score
       scalability: v.number(),
+      scalability_explanation: v.string(), // explanation for scalability score
       profitability: v.number(),
+      profitability_explanation: v.string(), // explanation for profitability score
     }),
-    generated_by: v.string(),
   }),
   plans: defineTable({
     idea_id: v.string(),
