@@ -99,3 +99,49 @@ export const getAllIdeas = query({
     return ideas;
   }
 });
+
+export const createScore = mutation({
+  args: {
+    idea_id: v.id("ideas"),
+    overall_score: v.number(),
+    criteria_scores: v.object({
+      innovation: v.number(),
+      innovation_explanation: v.string(),
+      market_fit: v.number(),
+      market_fit_explanation: v.string(),
+      feasibility: v.number(),
+      feasibility_explanation: v.string(),
+      scalability: v.number(),
+      scalability_explanation: v.string(),
+      profitability: v.number(),
+      profitability_explanation: v.string(),
+    }),
+  },
+  handler: async (ctx, args) => {
+    const scoreId = await ctx.db.insert("scores", args);
+    
+    // Update the idea with the new score_id
+    await ctx.db.patch(args.idea_id, { score_id: scoreId });
+    
+    return scoreId;
+  },
+});
+
+// Mutation to create a new plan
+export const createPlan = mutation({
+  args: {
+    idea_id: v.id("ideas"),
+    tech: v.string(),
+    talent: v.string(),
+    finance: v.string(),
+    legal: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const planId = await ctx.db.insert("plans", args);
+    
+    // Update the idea with the new plan_id
+    await ctx.db.patch(args.idea_id, { plan_id: planId });
+    
+    return planId;
+  },
+});

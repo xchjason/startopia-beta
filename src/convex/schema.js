@@ -15,11 +15,11 @@ export default defineSchema({
     problem: v.string(),
     solution: v.string(),
     category: v.string(),
-    score_id: v.optional(v.string()),
-    plan_id: v.optional(v.string()),
+    score_id: v.optional(v.union(v.id("scores"), v.string())),
+    plan_id: v.optional(v.union(v.id("plans"), v.string())),
   }),
   scores: defineTable({
-    idea_id: v.string(),
+    idea_id: v.id("ideas"),
     overall_score: v.number(),
     criteria_scores: v.object({
       innovation: v.number(),
@@ -35,7 +35,7 @@ export default defineSchema({
     }),
   }),
   plans: defineTable({
-    idea_id: v.string(),
+    idea_id: v.id("ideas"),
     tech: v.string(),
     talent: v.string(),
     finance: v.string(),
