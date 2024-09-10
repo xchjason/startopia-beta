@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
-import Profile from "./pages/Profile"; // Import Profile component
-import { NavBar } from "./components/navbar/NavBar"; // Import NavBar component
-import Create from "./pages/Create"; // Import Create component
-import Portfolio from "./pages/Portfolio"; // Import Portfolio component
+import Profile from "./pages/Profile";
+import { NavBar } from "./components/navbar/NavBar";
+import Create from "./pages/Create";
+import Portfolio from "./pages/Portfolio";
+import IdeaPage from "./pages/IdeaPage"; // Import the new IdeaPage component
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -33,9 +34,9 @@ const AppRoutes = ({ isAuthenticated }) => (
         </ProtectedRoute>
       }
     />
-    {/* Add new routes for Create and Portfolio */}
     <Route path="/create" element={<Create />} />
     <Route path="/portfolio" element={<Portfolio />} />
+    <Route path="/idea/:id" element={<IdeaPage />} /> {/* Add new route for IdeaPage */}
   </Routes>
 );
 
@@ -45,7 +46,7 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <NavBar currentUser={user} /> {/* Always display NavBar */}
+        <NavBar currentUser={user} />
         <AppRoutes isAuthenticated={isAuthenticated} />
       </div>
     </Router>
