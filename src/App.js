@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
@@ -11,12 +11,17 @@ import IdeaPage from "./pages/IdeaPage";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth0();
+  const location = useLocation();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  return children;
 };
 
 const AppRoutes = ({ isAuthenticated }) => (
@@ -36,7 +41,14 @@ const AppRoutes = ({ isAuthenticated }) => (
     />
     <Route path="/create" element={<Create />} />
     <Route path="/portfolio" element={<Portfolio />} />
-    <Route path="/idea/:id" element={<IdeaPage />} />
+    <Route
+      path="/idea/:id"
+      element={
+        <ProtectedRoute>
+          <IdeaPage />
+        </ProtectedRoute>
+      }
+    />
   </Routes>
 );
 
