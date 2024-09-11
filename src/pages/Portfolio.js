@@ -39,7 +39,7 @@ const Portfolio = () => {
               <IdeaCard 
                 idea={idea} 
                 showSaveButton={false} 
-                showExpandOption={true} // Changed to true to allow expansion
+                showExpandOption={false} // Changed to false to disable expansion
               />
             </Grid>
           ))}
