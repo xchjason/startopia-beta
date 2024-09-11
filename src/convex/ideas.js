@@ -33,16 +33,18 @@ export const createIdea = mutation({
 export const updateIdea = mutation({
   args: {
     ideaId: v.id("ideas"),
-    user_id: v.string(), // Ensure user_id is included in the args
-    title: v.string(),
-    description: v.string(),
-    problem: v.string(),
-    solution: v.string(),
-    category: v.string(),
+    user_id: v.string(),
+    title: v.optional(v.string()),
+    description: v.optional(v.string()),
+    problem: v.optional(v.string()),
+    solution: v.optional(v.string()),
+    category: v.optional(v.string()),
     score_id: v.optional(v.string()),
     plan_id: v.optional(v.string())
   },
-  handler: async (ctx, { ideaId, user_id, title, description, problem, solution, category, score_id = "", plan_id = "" }) => {
+  handler: async (ctx, args) => {
+    const { ideaId, user_id, ...updates } = args;
+
     // Fetch the idea from the database
     const idea = await ctx.db.get(ideaId);
 
@@ -51,17 +53,13 @@ export const updateIdea = mutation({
       throw new Error("Unauthorized: You can only update your own ideas.");
     }
 
+    // Remove undefined values from updates
+    const filteredUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    );
+
     // Proceed with the update
-    return await ctx.db.replace(ideaId, {
-      user_id, // Ensure user_id is included in the update
-      title,
-      description,
-      problem,
-      solution,
-      category,
-      score_id,
-      plan_id
-    });
+    return await ctx.db.patch(ideaId, filteredUpdates);
   }
 });
 
