@@ -102,16 +102,13 @@ const IdeaPage = () => {
           Evaluate Idea
         </Button>
         {scores && (
-          <>
+          <Box mt={2}>
             {Object.entries(scores).map(([criterion, score]) => (
-              <Accordion key={criterion}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{criterion}: {score}</Typography>
-                </AccordionSummary>
-                {/* Remove AccordionDetails with placeholder text */}
-              </Accordion>
+              <Typography key={criterion}>
+                {criterion}: {score}
+              </Typography>
             ))}
-          </>
+          </Box>
         )}
       </Box>
 
