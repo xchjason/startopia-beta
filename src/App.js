@@ -28,7 +28,7 @@ const AppRoutes = ({ isAuthenticated }) => (
   <Routes>
     <Route
       path="/"
-      element={isAuthenticated ? <Navigate to="/profile" /> : <Home />}
+      element={isAuthenticated ? <Navigate to="/portfolio" /> : <Home />}
     />
     <Route path="/login" element={<LoginPage />} />
     <Route
