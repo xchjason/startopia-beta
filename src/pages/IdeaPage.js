@@ -62,18 +62,7 @@ const IdeaPage = () => {
     });
   };
 
-  const chartData = scores ? {
-    labels: Object.keys(scores),
-    datasets: [{
-      label: 'Scores',
-      data: Object.values(scores),
-      backgroundColor: 'rgba(75, 192, 192, 0.6)',
-    }]
-  } : null;
-
-  const overallScore = scores ? 
-    Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 
-    null;
+  // Remove chartData and overallScore calculations
 
   if (!id) {
     return <Typography>No idea selected</Typography>;
@@ -114,20 +103,12 @@ const IdeaPage = () => {
         </Button>
         {scores && (
           <>
-            <Box my={2} style={{ width: '100%', height: '300px' }}>
-              <Bar data={chartData} />
-            </Box>
-            <Typography variant="body1" paragraph>
-              <strong>Overall Score:</strong> {overallScore.toFixed(2)}
-            </Typography>
             {Object.entries(scores).map(([criterion, score]) => (
               <Accordion key={criterion}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>{criterion}: {score}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>Explanation for {criterion} score...</Typography>
-                </AccordionDetails>
+                {/* Remove AccordionDetails with placeholder text */}
               </Accordion>
             ))}
           </>
