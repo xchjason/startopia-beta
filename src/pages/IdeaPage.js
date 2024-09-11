@@ -125,24 +125,20 @@ const IdeaPage = () => {
           Plan
         </Typography>
         {plan ? (
-          <Grid container spacing={2} my={2}>
+          <Box my={2}>
             {Object.entries(plan)
               .filter(([key]) => !['_id', 'idea_id', '_creationTime'].includes(key))
               .map(([aspect, planDetails]) => (
-                <Grid item xs={12} key={aspect}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" component="h3">
-                        {aspect}
-                      </Typography>
-                      <Typography variant="body1">
-                        {planDetails}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                <Box key={aspect} mb={2}>
+                  <Typography variant="h6" component="h3">
+                    {aspect}
+                  </Typography>
+                  <Typography variant="body1">
+                    {planDetails}
+                  </Typography>
+                </Box>
               ))}
-          </Grid>
+          </Box>
         ) : (
           <Button variant="contained" color="primary" onClick={generatePlan}>
             Generate Plan
