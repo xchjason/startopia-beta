@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Button, Card, CardContent, Grid, Box } from '@mui/material';
+import { Container, Typography, Button, Card, CardContent, Grid, Box, CircularProgress } from '@mui/material';
 import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
 
@@ -59,7 +59,11 @@ const IdeaPage = () => {
   }
 
   if (idea === undefined) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (idea === null) {
