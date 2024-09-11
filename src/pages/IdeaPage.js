@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Container, Typography, Button, Card, CardContent, Grid, Box, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -15,26 +15,51 @@ const IdeaPage = () => {
   const [plans, setPlans] = useState(null);
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
+  const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
+  const generatePlanAction = useAction(api.llm.generatePlan);
+  const createScoreMutation = useMutation(api.ideas.createScore);
+  const createPlanMutation = useMutation(api.ideas.createPlan);
 
-  const evaluateIdea = () => {
-    const mockScores = {
-      innovation: 8,
-      market_fit: 7,
-      feasibility: 9,
-      scalability: 8,
-      profitability: 7,
-    };
-    setScores(mockScores);
+  const evaluateIdea = async () => {
+    if (!idea) return;
+
+    const evaluation = await evaluateIdeaAction({
+      idea_id: id,
+      title: idea.title,
+      description: idea.description,
+      problem: idea.problem,
+      solution: idea.solution,
+      category: idea.category,
+    });
+
+    setScores(evaluation.evaluation.criteria_scores);
+    await createScoreMutation({
+      idea_id: id,
+      evaluation: evaluation.evaluation,
+    });
   };
 
-  const generatePlan = () => {
-    const mockPlans = {
-      tech: "Develop a mobile app using React Native, integrate TensorFlow for AI capabilities, and use Firebase for backend services.",
-      talent: "Hire a senior full-stack developer, a machine learning engineer, and a UX designer. Consider partnering with fitness professionals for content.",
-      finance: "Seek seed funding of $500,000 from angel investors. Estimate $200,000 for initial development and $300,000 for marketing and operations.",
-      legal: "Register the company as an LLC, file for relevant patents on AI algorithms, and ensure compliance with data protection regulations."
-    };
-    setPlans(mockPlans);
+  const generatePlan = async () => {
+    if (!idea) return;
+
+    const generatedPlan = await generatePlanAction({
+      idea_id: id,
+      title: idea.title,
+      description: idea.description,
+      problem: idea.problem,
+      solution: idea.solution,
+      category: idea.category,
+    });
+
+    // Remove idea_id from the plan before setting state
+    const { idea_id, ...planDetails } = generatedPlan;
+    setPlans(planDetails);
+    
+    // Adjust the structure to match the createPlan mutation expectations
+    await createPlanMutation({
+      idea_id: id,
+      plan: planDetails,
+    });
   };
 
   const chartData = scores ? {
@@ -118,7 +143,7 @@ const IdeaPage = () => {
         </Button>
         {plans && (
           <Grid container spacing={2} my={2}>
-            {Object.entries(plans).map(([aspect, plan]) => (
+            {Object.entries(plans).filter(([key]) => key !== 'idea_id').map(([aspect, plan]) => (
               <Grid item xs={12} key={aspect}>
                 <Card>
                   <CardContent>
