@@ -13,7 +13,7 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAction, useMutation } from "convex/react"; 
 import { api } from "../convex/_generated/api";
-import IdeaCard from "../components/card/IdeaCard";
+import CreateCard from "../components/card/CreateCard";
 
 const Create = () => {
   const { user } = useAuth0();
@@ -191,7 +191,7 @@ const Create = () => {
           <Grid container spacing={3}>
             {ideas.map((idea, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <IdeaCard idea={idea} onSave={handleSave} />
+                <CreateCard idea={idea} onSave={handleSave} />
               </Grid>
             ))}
           </Grid>
