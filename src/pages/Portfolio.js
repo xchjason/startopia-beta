@@ -20,7 +20,8 @@ const Portfolio = () => {
     }
   }, [ideas]);
 
-  if (!ideas) {
+  // Check if the query is still loading
+  if (ideasQuery === undefined) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
@@ -39,7 +40,7 @@ const Portfolio = () => {
               <IdeaCard 
                 idea={idea} 
                 showSaveButton={false} 
-                showExpandOption={false} // Changed to false to disable expansion
+                showExpandOption={false}
               />
             </Grid>
           ))}
