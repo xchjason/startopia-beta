@@ -175,7 +175,9 @@ const ScoreSchema = z.object({
       1. Tech: Outline the key technologies and development steps.
       2. Talent: Describe the key roles and skills needed.
       3. Finance: Provide a basic financial strategy and funding needs.
-      4. Legal: Highlight important legal considerations and steps.`;
+      4. Legal: Highlight important legal considerations and steps.
+      
+      Ensure each aspect is explained in a single, well-formed paragraph without bullet points or line breaks.`;
   
       const completion = await openai.beta.chat.completions.parse({
         model: "gpt-4o-mini-2024-07-18",
