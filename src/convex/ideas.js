@@ -118,15 +118,24 @@ export const createScore = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const scoreId = await ctx.db.insert("scores", {
-      idea_id: args.idea_id,
-      ...args.evaluation
-    });
+    const existingScore = await ctx.db.query("scores").filter(q => q.eq(q.field("idea_id"), args.idea_id)).first();
 
-    // Update the idea with the new score_id
-    await ctx.db.patch(args.idea_id, { score_id: scoreId });
+    if (existingScore) {
+      await ctx.db.patch(existingScore._id, {
+        ...args.evaluation
+      });
+      return existingScore._id;
+    } else {
+      const scoreId = await ctx.db.insert("scores", {
+        idea_id: args.idea_id,
+        ...args.evaluation
+      });
 
-    return scoreId;
+      // Update the idea with the new score_id
+      await ctx.db.patch(args.idea_id, { score_id: scoreId });
+
+      return scoreId;
+    }
   },
 });
 
@@ -142,14 +151,23 @@ export const createPlan = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const planId = await ctx.db.insert("plans", {
-      idea_id: args.idea_id,
-      ...args.plan
-    });
+    const existingPlan = await ctx.db.query("plans").filter(q => q.eq(q.field("idea_id"), args.idea_id)).first();
 
-    // Update the idea with the new plan_id
-    await ctx.db.patch(args.idea_id, { plan_id: planId });
+    if (existingPlan) {
+      await ctx.db.patch(existingPlan._id, {
+        ...args.plan
+      });
+      return existingPlan._id;
+    } else {
+      const planId = await ctx.db.insert("plans", {
+        idea_id: args.idea_id,
+        ...args.plan
+      });
 
-    return planId;
+      // Update the idea with the new plan_id
+      await ctx.db.patch(args.idea_id, { plan_id: planId });
+
+      return planId;
+    }
   },
 });
