@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Container, Typography, Button, Card, CardContent, Grid, Box, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Container, Typography, Button, Card, CardContent, Grid, Box } from '@mui/material';
 import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
 const IdeaPage = () => {
-  const { id } = useParams(); // Extract ideaId from URL
-  const [scores, setScores] = useState(null);
-  const [plans, setPlans] = useState(null);
+  const { id } = useParams();
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
+  const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
+  const plan = useQuery(api.ideas.getPlan, { ideaId: id });
+
   const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
   const generatePlanAction = useAction(api.llm.generatePlan);
   const createScoreMutation = useMutation(api.ideas.createScore);
@@ -32,7 +28,6 @@ const IdeaPage = () => {
       category: idea.category,
     });
 
-    setScores(evaluation.evaluation.criteria_scores);
     await createScoreMutation({
       idea_id: id,
       evaluation: evaluation.evaluation,
@@ -51,18 +46,13 @@ const IdeaPage = () => {
       category: idea.category,
     });
 
-    // Remove idea_id from the plan before setting state
     const { idea_id, ...planDetails } = generatedPlan;
-    setPlans(planDetails);
     
-    // Adjust the structure to match the createPlan mutation expectations
     await createPlanMutation({
       idea_id: id,
       plan: planDetails,
     });
   };
-
-  // Remove chartData and overallScore calculations
 
   if (!id) {
     return <Typography>No idea selected</Typography>;
@@ -98,17 +88,31 @@ const IdeaPage = () => {
         <Typography variant="h5" component="h2" gutterBottom>
           Evaluation
         </Typography>
-        <Button variant="contained" color="primary" onClick={evaluateIdea}>
-          Evaluate Idea
-        </Button>
-        {scores && (
+        {evaluation ? (
           <Box mt={2}>
-            {Object.entries(scores).map(([criterion, score]) => (
-              <Typography key={criterion}>
-                {criterion}: {score}
-              </Typography>
+            <Typography>
+              <strong>Overall Score:</strong> {evaluation.overall_score}
+            </Typography>
+            {Object.entries(evaluation.criteria_scores).map(([criterion, data]) => (
+              <Box key={criterion} mt={2}>
+                <Typography variant="h6">
+                  {criterion.charAt(0).toUpperCase() + criterion.slice(1).replace('_', ' ')}
+                </Typography>
+                <Typography>
+                  <strong>Score:</strong> {data.score || data}
+                </Typography>
+                {data.explanation && (
+                  <Typography>
+                    <strong>Explanation:</strong> {data.explanation}
+                  </Typography>
+                )}
+              </Box>
             ))}
           </Box>
+        ) : (
+          <Button variant="contained" color="primary" onClick={evaluateIdea}>
+            Evaluate Idea
+          </Button>
         )}
       </Box>
 
@@ -116,26 +120,29 @@ const IdeaPage = () => {
         <Typography variant="h5" component="h2" gutterBottom>
           Plan
         </Typography>
-        <Button variant="contained" color="primary" onClick={generatePlan}>
-          Generate Plan
-        </Button>
-        {plans && (
+        {plan ? (
           <Grid container spacing={2} my={2}>
-            {Object.entries(plans).filter(([key]) => key !== 'idea_id').map(([aspect, plan]) => (
-              <Grid item xs={12} key={aspect}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" component="h3">
-                      {aspect}
-                    </Typography>
-                    <Typography variant="body1">
-                      {plan}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+            {Object.entries(plan)
+              .filter(([key]) => !['_id', 'idea_id', '_creationTime'].includes(key))
+              .map(([aspect, planDetails]) => (
+                <Grid item xs={12} key={aspect}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6" component="h3">
+                        {aspect}
+                      </Typography>
+                      <Typography variant="body1">
+                        {planDetails}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
+        ) : (
+          <Button variant="contained" color="primary" onClick={generatePlan}>
+            Generate Plan
+          </Button>
         )}
       </Box>
     </Container>

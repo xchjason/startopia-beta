@@ -171,3 +171,23 @@ export const createPlan = mutation({
     }
   },
 });
+
+// Query to get evaluation for a specific idea
+export const getEvaluation = query({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, { ideaId }) => {
+    const idea = await ctx.db.get(ideaId);
+    if (!idea || !idea.score_id) return null;
+    return await ctx.db.get(idea.score_id);
+  }
+});
+
+// Query to get plan for a specific idea
+export const getPlan = query({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, { ideaId }) => {
+    const idea = await ctx.db.get(ideaId);
+    if (!idea || !idea.plan_id) return null;
+    return await ctx.db.get(idea.plan_id);
+  }
+});
