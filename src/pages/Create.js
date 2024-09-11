@@ -11,7 +11,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAction, useMutation } from "convex/react"; 
+import { useAction, useMutation, useQuery } from "convex/react"; 
 import { api } from "../convex/_generated/api";
 import CreateCard from "../components/card/CreateCard";
 
@@ -25,7 +25,8 @@ const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const generateIdeas = useAction(api.llm.generateIdeas);
-  const createIdea = useMutation(api.ideas.createIdea); // Use useMutation for createIdea
+  const createIdea = useMutation(api.ideas.createIdea);
+  const getIdeasByUser = useQuery(api.ideas.getIdeasByUser, { user_id: user?.sub });
 
   const handleGenerate = async () => {
     if (!problem) {
@@ -67,6 +68,16 @@ const Create = () => {
 
   const handleSave = async (idea) => {
     try {
+      // Check if the idea already exists
+      const existingIdea = getIdeasByUser?.find(
+        (savedIdea) => savedIdea.title === idea.title && savedIdea.description === idea.description
+      );
+
+      if (existingIdea) {
+        alert(`Idea "${idea.title}" has already been saved!`);
+        return;
+      }
+
       await createIdea({
         user_id: user.sub,
         title: idea.title,
