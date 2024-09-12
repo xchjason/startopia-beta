@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import ReactApexChart from 'react-apexcharts';
 
 const ExpandableSection = ({ title, content, isExpanded, onToggle }) => (
   <div className="mb-4">
@@ -23,40 +23,89 @@ const ExpandableSection = ({ title, content, isExpanded, onToggle }) => (
 );
 
 const ScoreChart = ({ scores }) => {
-  const data = Object.entries(scores)
+  const categories = Object.entries(scores)
     .filter(([name]) => !name.endsWith('_explanation'))
-    .map(([name, value]) => ({
-      name,
-      score: value,
-      explanation: scores[`${name}_explanation`],
-    }));
+    .map(([name]) => name);
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-dark-800 p-2 rounded shadow max-w-xs">
-          <p className="font-semibold">{label}</p>
-          <p>Score: {payload[0].value}</p>
-          <p className="text-sm">{payload[0].payload.explanation}</p>
-        </div>
-      );
-    }
-    return null;
+  const seriesData = Object.entries(scores)
+    .filter(([name]) => !name.endsWith('_explanation'))
+    .map(([name, value]) => value);
+
+  const explanations = Object.entries(scores)
+    .filter(([name]) => name.endsWith('_explanation'))
+    .reduce((acc, [name, value]) => {
+      const key = name.replace('_explanation', '');
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  const options = {
+    chart: {
+      type: 'radar',
+      background: 'transparent',
+      toolbar: {
+        show: false, // Disable download and other toolbar options
+      },
+    },
+    xaxis: {
+      categories: categories,
+      labels: {
+        style: {
+          colors: '#FFFFFF', // White text for labels
+        },
+      },
+    },
+    yaxis: {
+      show: false,
+      min: 0,
+      max: 10,
+    },
+    plotOptions: {
+      radar: {
+        size: 140,
+        polygons: {
+          strokeColor: '#303030',
+          fill: {
+            colors: ['#1f2937', '#111827'], // Dark shades for background
+          },
+        },
+      },
+    },
+    stroke: {
+      width: 2,
+      colors: ['#4299e1'],
+    },
+    fill: {
+      opacity: 0.2,
+    },
+    markers: {
+      size: 4,
+      colors: ['#4299e1'],
+      strokeColor: '#4299e1',
+      strokeWidth: 2,
+    },
+    tooltip: {
+      theme: 'dark',
+      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+        const category = w.globals.labels[dataPointIndex];
+        const score = series[seriesIndex][dataPointIndex];
+        const explanation = explanations[category];
+        return '<div class="bg-dark-800 p-3 rounded shadow" style="min-width: 200px; max-width: 100%;">' +
+          '<p class="font-semibold text-lg mb-2">' + category + '</p>' +
+          '<p class="mb-2"><strong>Score:</strong> ' + score + '</p>' +
+          '<p class="text-sm">' + explanation + '</p>' +
+          '</div>';
+      }
+    },
   };
 
+  const series = [{
+    name: 'Score',
+    data: seriesData,
+  }];
+
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart
-        layout="vertical"
-        data={data}
-        margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
-      >
-        <XAxis type="number" domain={[0, 10]} />
-        <YAxis dataKey="name" type="category" width={100} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="score" fill="#4299e1" barSize={10} />
-      </BarChart>
-    </ResponsiveContainer>
+    <ReactApexChart options={options} series={series} type="radar" height={350} />
   );
 };
 
