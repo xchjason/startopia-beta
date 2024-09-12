@@ -52,15 +52,15 @@ const ScoreChart = ({ scores }) => {
     },
     stroke: {
       width: 2,
-      colors: ['#4299e1'],
+      colors: ['#4299e1'], // Keeping the line color blue
     },
     fill: {
-      opacity: 0.2,
+      opacity: 0.8,
     },
     markers: {
       size: 4,
-      colors: ['#4299e1'],
-      strokeColor: '#4299e1',
+      colors: ['#FFFF00'], // Changed to yellow
+      strokeColor: '#FFFF00', // Changed to yellow
       strokeWidth: 2,
     },
     tooltip: {

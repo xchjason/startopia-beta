@@ -26,6 +26,8 @@
     "chart.js": "^4.4.4",
     "convex": "^1.15.0",
     "dotenv": "^16.4.5",
+    "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
     "framer-motion": "^11.5.4",
     "lucide-react": "^0.439.0",
     "mini-svg-data-uri": "^1.4.4",
