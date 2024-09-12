@@ -11,7 +11,7 @@ const IdeaDetails = ({ idea }) => {
       <div className="space-y-6">
         {/* Description Section */}
         <div className="flex items-start space-x-3">
-          <DescriptionIcon className="text-blue-400" fontSize="small" />
+          <DescriptionIcon className="text-blue-400 mt-1" fontSize="small" /> {/* Added mt-1 */}
           <div>
             <h2 className="text-xl font-semibold text-gray-100">Description</h2>
             <p className="mt-1 text-base text-gray-300">{idea.description}</p>
@@ -19,7 +19,7 @@ const IdeaDetails = ({ idea }) => {
         </div>
         {/* Problem Section */}
         <div className="flex items-start space-x-3">
-          <ErrorOutlineIcon className="text-red-400" fontSize="small" />
+          <ErrorOutlineIcon className="text-red-400 mt-1" fontSize="small" /> {/* Added mt-1 */}
           <div>
             <h2 className="text-xl font-semibold text-gray-100">Problem</h2>
             <p className="mt-1 text-base text-gray-300">{idea.problem}</p>
@@ -27,7 +27,7 @@ const IdeaDetails = ({ idea }) => {
         </div>
         {/* Solution Section */}
         <div className="flex items-start space-x-3">
-          <LightbulbOutlinedIcon className="text-yellow-400" fontSize="small" />
+          <LightbulbOutlinedIcon className="text-yellow-400 mt-1" fontSize="small" /> {/* Added mt-1 */}
           <div>
             <h2 className="text-xl font-semibold text-gray-100">Solution</h2>
             <p className="mt-1 text-base text-gray-300">{idea.solution}</p>
@@ -35,7 +35,7 @@ const IdeaDetails = ({ idea }) => {
         </div>
         {/* Category Section */}
         <div className="flex items-start space-x-3">
-          <LocalOfferOutlinedIcon className="text-green-400" fontSize="small" />
+          <LocalOfferOutlinedIcon className="text-green-400 mt-1" fontSize="small" /> {/* Added mt-1 */}
           <div>
             <h2 className="text-xl font-semibold text-gray-100">Category</h2>
             <div className="mt-1">
