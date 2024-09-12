@@ -1,64 +1,99 @@
-import { ResponsiveRadar } from '@nivo/radar';
+import React from 'react';
+import ReactApexChart from 'react-apexcharts';
 
 const ScoreChart = ({ scores }) => {
-  const data = Object.entries(scores)
+  const categories = Object.entries(scores)
     .filter(([name]) => !name.endsWith('_explanation'))
-    .map(([name, value]) => ({
-      criteria: name,
-      score: value,
-      explanation: scores[`${name}_explanation`] || 'No explanation provided.',
-    }));
+    .map(([name]) => name);
 
-  return (
-    <div style={{ height: 400 }}>
-      <ResponsiveRadar
-        data={data}
-        keys={['score']}
-        indexBy="criteria"
-        maxValue={10}
-        margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-        curve="linearClosed"
-        borderWidth={2}
-        borderColor={{ from: 'color' }}
-        gridLevels={5}
-        gridShape="circular"
-        gridLabelOffset={36}
-        enableDots={true}
-        dotSize={10}
-        dotColor={{ theme: 'background' }}
-        dotBorderWidth={2}
-        dotBorderColor={{ from: 'color' }}
-        enableDotLabel={true}
-        dotLabel="value"
-        dotLabelYOffset={-12}
-        colors={{ scheme: 'nivo' }}
-        fillOpacity={0.25}
-        blendMode="multiply"
-        animate={true}
-        isInteractive={true}
-        tooltip={({ indexValue, data }) => (
-          <div className="bg-dark-800 p-2 rounded shadow max-w-xs">
-            <p className="font-semibold">{indexValue}</p>
-            <p>Score: {data.score}</p>
-            <p className="text-sm">{data.explanation}</p>
-          </div>
-        )}
-        theme={{
-          background: '#1a202c',
-          textColor: '#cbd5e0',
-          grid: {
-            line: {
-              stroke: '#2d3748',
-            },
+  const seriesData = Object.entries(scores)
+    .filter(([name]) => !name.endsWith('_explanation'))
+    .map(([name, value]) => value);
+
+  const explanations = Object.entries(scores)
+    .filter(([name]) => name.endsWith('_explanation'))
+    .reduce((acc, [name, value]) => {
+      const key = name.replace('_explanation', '');
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  const options = {
+    chart: {
+      type: 'radar',
+      background: 'transparent',
+      toolbar: {
+        show: false,
+      },
+    },
+    xaxis: {
+      categories: categories,
+      labels: {
+        style: {
+          colors: '#FFFFFF',
+        },
+      },
+    },
+    yaxis: {
+      show: false,
+      min: 0,
+      max: 10,
+    },
+    plotOptions: {
+      radar: {
+        size: 140,
+        polygons: {
+          strokeColor: '#303030',
+          fill: {
+            colors: ['#1f2937', '#111827'],
           },
-          tooltip: {
-            container: {
-              background: '#2d3748',
-              color: '#e2e8f0',
-            },
-          },
-        }}
-      />
-    </div>
-  );
+        },
+      },
+    },
+    stroke: {
+      width: 2,
+      colors: ['#4299e1'],
+    },
+    fill: {
+      opacity: 0.2,
+    },
+    markers: {
+      size: 4,
+      colors: ['#4299e1'],
+      strokeColor: '#4299e1',
+      strokeWidth: 2,
+    },
+    tooltip: {
+      theme: 'dark',
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        const category = w.globals.labels[dataPointIndex];
+        const score = series[seriesIndex][dataPointIndex];
+        const explanation = explanations[category];
+        return (
+          '<div style="min-width: 200px; max-width: 300px; padding: 12px; background-color: #1A202C; color: #E2E8F0; border-radius: 8px; white-space: normal; word-break: break-word; overflow-wrap: break-word;">' +
+          '<p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0;">' +
+          category +
+          '</p>' +
+          '<p style="margin: 0 0 8px 0;"><strong>Score:</strong> ' +
+          score +
+          '</p>' +
+          '<p style="font-size: 14px; margin: 0;">' +
+          explanation +
+          '</p>' +
+          '</div>'
+        );
+      },
+    },
+  };
+
+  const series = [
+    {
+      name: 'Score',
+      data: seriesData,
+    },
+  ];
+
+  return <ReactApexChart options={options} series={series} type="radar" height={350} />;
 };
+
+export default ScoreChart;
