@@ -90,14 +90,29 @@ const IdeaPage = () => {
 
   const planContent = plan ? (
     <div>
-      {Object.entries(plan)
-        .filter(([key]) => !['_id', 'idea_id', '_creationTime'].includes(key))
-        .map(([aspect, planDetails]) => (
-          <div key={aspect} className="mb-4">
-            <h3 className="text-lg font-semibold mb-1 text-white">{aspect}</h3>
-            <p className="text-gray-300">{planDetails}</p>
-          </div>
-        ))}
+      <div className="flex space-x-4 mb-4">
+        {Object.entries(plan)
+          .filter(([key]) => !['_id', 'idea_id', '_creationTime'].includes(key))
+          .slice(0, 4)
+          .map(([aspect, planDetails], index) => {
+            const colors = ['bg-green-600', 'bg-blue-600', 'bg-purple-600', 'bg-red-500'];
+            return (
+              <button
+                key={aspect}
+                className={`${colors[index]} w-1/4 p-2 rounded-lg text-white font-semibold hover:opacity-80 transition-opacity duration-200`}
+                onClick={() => setPlanExpanded(planExpanded === aspect ? false : aspect)}
+              >
+                {aspect}
+              </button>
+            );
+          })}
+      </div>
+      {planExpanded && (
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold mb-2 text-white">{planExpanded}</h3>
+          <p className="text-gray-300">{plan[planExpanded]}</p>
+        </div>
+      )}
     </div>
   ) : (
     <button
