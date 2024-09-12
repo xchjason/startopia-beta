@@ -44,14 +44,14 @@ const ScoreChart = ({ scores }) => {
       type: 'radar',
       background: 'transparent',
       toolbar: {
-        show: false, // Disable download and other toolbar options
+        show: false,
       },
     },
     xaxis: {
       categories: categories,
       labels: {
         style: {
-          colors: '#FFFFFF', // White text for labels
+          colors: '#FFFFFF',
         },
       },
     },
@@ -66,7 +66,7 @@ const ScoreChart = ({ scores }) => {
         polygons: {
           strokeColor: '#303030',
           fill: {
-            colors: ['#1f2937', '#111827'], // Dark shades for background
+            colors: ['#1f2937', '#111827'],
           },
         },
       },
@@ -90,11 +90,13 @@ const ScoreChart = ({ scores }) => {
         const category = w.globals.labels[dataPointIndex];
         const score = series[seriesIndex][dataPointIndex];
         const explanation = explanations[category];
-        return '<div class="bg-dark-800 p-3 rounded shadow" style="min-width: 200px; max-width: 100%;">' +
-          '<p class="font-semibold text-lg mb-2">' + category + '</p>' +
-          '<p class="mb-2"><strong>Score:</strong> ' + score + '</p>' +
-          '<p class="text-sm">' + explanation + '</p>' +
-          '</div>';
+        return (
+          '<div style="min-width: 200px; max-width: 300px; padding: 12px; background-color: #1A202C; color: #E2E8F0; border-radius: 8px; white-space: normal; word-break: break-word; overflow-wrap: break-word;">' +
+            '<p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0;">' + category + '</p>' +
+            '<p style="margin: 0 0 8px 0;"><strong>Score:</strong> ' + score + '</p>' +
+            '<p style="font-size: 14px; margin: 0;">' + explanation + '</p>' +
+          '</div>'
+        );
       }
     },
   };
