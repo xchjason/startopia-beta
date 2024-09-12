@@ -31,22 +31,22 @@ const ScoreChart = ({ scores }) => {
       labels: {
         style: {
           colors: '#FFFFFF',
+          fontSize: '14px', // Increased font size
         },
       },
     },
     yaxis: {
-      show: false,
-      min: 0,
-      max: 10,
+      show: false, // Hide y-axis labels
     },
     plotOptions: {
       radar: {
         size: 140,
         polygons: {
-          strokeColor: '#303030',
+          strokeColor: '#4A5568', // Less prominent grid lines
           fill: {
             colors: ['#1f2937', '#111827'],
           },
+          connectorColors: '#4A5568', // Subtle connector lines
         },
       },
     },
