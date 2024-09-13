@@ -2,6 +2,19 @@ import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const CompetitionChart = ({ competitors }) => {
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip" style={{ backgroundColor: '#333', color: '#fff', padding: '10px', border: '1px solid #555' }}>
+          <p>{`${payload[0].payload.name}`}</p>
+          <p>{`Vision Completeness: ${payload[0].value}`}</p>
+          <p>{`Execution Ability: ${payload[1].value}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="w-full h-96">
       <ResponsiveContainer width="100%" height="100%">
@@ -35,7 +48,7 @@ const CompetitionChart = ({ competitors }) => {
             <Label value="Execution Ability" angle={-90} position="left" style={{ textAnchor: 'middle' }} />
           </YAxis>
           <ZAxis type="category" dataKey="name" name="Company" />
-          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
           <Legend verticalAlign="top" height={36} /> {/* Moved legend to the top */}
           <ReferenceLine x={5} stroke="#666" strokeWidth={2} />
           <ReferenceLine y={5} stroke="#666" strokeWidth={2} />
