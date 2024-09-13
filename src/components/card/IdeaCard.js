@@ -12,6 +12,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import { Link } from 'react-router-dom';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -55,6 +57,14 @@ const IdeaCard = ({
 
   const isDescriptionTruncated = idea.description.length > 180;
   const isTitleTruncated = idea.title.length > 55;
+
+  const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: idea._id });
+
+  const getScoreColor = (score) => {
+    if (score < 5) return 'rgb(239, 68, 68)'; // Red for poor scores
+    if (score < 8) return 'rgb(249, 115, 22)'; // Orange for mediocre scores
+    return 'rgb(34, 197, 94)'; // Green for good scores
+  };
 
   return (
     <Link to={`/idea/${idea._id}`} style={{ textDecoration: 'none' }}>
@@ -130,6 +140,18 @@ const IdeaCard = ({
                 }}
               >
                 {idea.description}
+              </Typography>
+            )}
+            {evaluation && (
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  mt: 2, 
+                  color: getScoreColor(evaluation.overall_score),
+                  fontWeight: 'bold',
+                }}
+              >
+                Score: {evaluation.overall_score.toFixed(1)}
               </Typography>
             )}
           </div>
