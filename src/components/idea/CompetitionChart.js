@@ -2,7 +2,19 @@ import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const CompetitionChart = ({ competitors }) => {
-  const CustomTooltip = ({ active, payload, label }) => {
+  const renderScatterPoint = (props) => {
+    const { cx, cy, payload } = props;
+    return (
+      <g>
+        <circle cx={cx} cy={cy} r={5} fill={payload.isMainIdea ? "#FFD700" : "#00BFFF"} fillOpacity={0.8} />
+        <text x={cx} y={cy - 10} textAnchor="middle" fill="#fff" fontSize={10}>
+          {payload.name}
+        </text>
+      </g>
+    );
+  };
+
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip" style={{ backgroundColor: '#333', color: '#fff', padding: '10px', border: '1px solid #555' }}>
@@ -15,6 +27,9 @@ const CompetitionChart = ({ competitors }) => {
     return null;
   };
 
+  const mainIdea = competitors.find(comp => comp.isMainIdea);
+  const otherCompetitors = competitors.filter(comp => !comp.isMainIdea);
+
   return (
     <div className="w-full h-96">
       <ResponsiveContainer width="100%" height="100%">
@@ -22,7 +37,7 @@ const CompetitionChart = ({ competitors }) => {
           margin={{
             top: 20,
             right: 20,
-            bottom: 20, // Increased bottom margin
+            bottom: 20,
             left: 20,
           }}
         >
@@ -48,23 +63,24 @@ const CompetitionChart = ({ competitors }) => {
             <Label value="Execution Ability" angle={-90} position="left" style={{ textAnchor: 'middle' }} />
           </YAxis>
           <ZAxis type="category" dataKey="name" name="Company" />
-          <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
-          <Legend verticalAlign="top" height={36} /> {/* Moved legend to the top */}
+          <Tooltip content={<CustomTooltip />} />
+          <Legend verticalAlign="top" height={36} iconType="circle" />
           <ReferenceLine x={5} stroke="#666" strokeWidth={2} />
           <ReferenceLine y={5} stroke="#666" strokeWidth={2} />
           <Scatter 
             name="Competitors" 
-            data={competitors.filter(comp => !comp.isMainIdea)} 
+            data={otherCompetitors} 
+            shape={renderScatterPoint}
             fill="#00BFFF"
-            fillOpacity={0.8}
           />
-          <Scatter
-            name="Our Idea"
-            data={competitors.filter(comp => comp.isMainIdea)}
-            fill="#FFD700"
-            fillOpacity={0.8}
-            shape="star"
-          />
+          {mainIdea && (
+            <Scatter 
+              name="Main Idea" 
+              data={[mainIdea]} 
+              shape={renderScatterPoint}
+              fill="#FFD700"
+            />
+          )}
         </ScatterChart>
       </ResponsiveContainer>
     </div>
