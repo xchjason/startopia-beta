@@ -197,3 +197,61 @@ const ScoreSchema = z.object({
       };
     },
   });
+
+  const CompetitorSchema = z.object({
+    name: z.string(),
+    innovationScore: z.number().int(),
+    marketFitScore: z.number().int(),
+    isMainIdea: z.boolean()
+  });
+  
+  const CompetitorsArraySchema = z.object({
+    competitors: z.array(CompetitorSchema)
+  });
+  
+  export const generateCompetitors = action({
+    args: { 
+      title: v.string(),
+      category: v.string(),
+      description: v.string(),
+      problem: v.string(),
+      solution: v.string(),
+    },
+    handler: async (_, args) => {
+      const prompt = `Generate a competitive analysis including the main startup idea and 4 real-life competitors:
+  
+      Main Startup Idea:
+      Title: ${args.title}
+      Category: ${args.category}
+      Description: ${args.description}
+      Problem: ${args.problem}
+      Solution: ${args.solution}
+  
+      For the main idea and each competitor, provide:
+      1. The name (use "${args.title}" for the main idea, real company names for competitors)
+      2. An innovation score (1-10, where 10 is most innovative)
+      3. A market fit score (1-10, where 10 is best fit for the problem, be critical)
+      4. Whether it's the main idea (true) or a competitor (false)
+  
+      Ensure the competitors are diverse in their approach and market position. Be critical in scoring.`;
+  
+      const completion = await openai.beta.chat.completions.parse({
+        model: "gpt-4o-mini-2024-07-18",
+        messages: [
+          { role: "system", content: "You are an expert in market analysis. Provide an objective competitive analysis including the main idea and real competitors." },
+          { role: "user", content: prompt },
+        ],
+        response_format: zodResponseFormat(CompetitorsArraySchema, "competitors"),
+      });
+  
+      const { competitors } = completion.choices[0].message.parsed;
+  
+      // Ensure the main idea is included and marked correctly
+      const mainIdeaIncluded = competitors.some(comp => comp.isMainIdea);
+      if (!mainIdeaIncluded) {
+        throw new Error("The main idea was not included in the generated competitors.");
+      }
+  
+      return competitors;
+    },
+  });
