@@ -43,6 +43,7 @@ const Portfolio = () => {
                   idea={idea} 
                   showSaveButton={false} 
                   showExpandOption={false}
+                  isPortfolio={true} // Add this prop
                 />
                 <Chip
                   label={idea.category}

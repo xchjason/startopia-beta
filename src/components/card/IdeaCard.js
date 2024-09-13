@@ -33,7 +33,8 @@ const IdeaCard = ({
   showSaveButton = true, 
   showExpandOption = true,
   expanded: controlledExpanded,
-  onExpandChange
+  onExpandChange,
+  isPortfolio = false // Add this new prop
 }) => {
   const [internalExpanded, setInternalExpanded] = useState(false);
   
@@ -75,7 +76,7 @@ const IdeaCard = ({
         bgcolor: 'rgba(30, 41, 59, 0.8)',
         color: 'white',
         borderRadius: 2,
-        position: 'relative',
+        position: 'relative', // Ensure this is set
         zIndex: 10,
         overflow: 'hidden',
         transition: 'all 0.3s ease',
@@ -144,7 +145,14 @@ const IdeaCard = ({
               </Typography>
             )}
             {evaluation && (
-              <Box sx={{ position: 'relative', display: 'inline-flex', mt: 2 }}>
+              <Box sx={{ 
+                position: isPortfolio ? 'absolute' : 'relative',
+                bottom: isPortfolio ? 8 : 'auto',
+                left: isPortfolio ? 8 : 'auto',
+                display: 'inline-flex', 
+                mt: isPortfolio ? 0 : 2,
+                zIndex: 30, // Ensure it's above the category chip
+              }}>
                 <CircularProgress
                   variant="determinate"
                   value={evaluation.overall_score * 10}
