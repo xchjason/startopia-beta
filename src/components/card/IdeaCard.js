@@ -6,7 +6,8 @@ import {
   IconButton,
   Collapse,
   Box,
-  Button
+  Button,
+  CircularProgress
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
@@ -61,9 +62,9 @@ const IdeaCard = ({
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: idea._id });
 
   const getScoreColor = (score) => {
-    if (score < 5) return 'rgb(239, 68, 68)'; // Red for poor scores
-    if (score < 8) return 'rgb(249, 115, 22)'; // Orange for mediocre scores
-    return 'rgb(34, 197, 94)'; // Green for good scores
+    if (score < 5) return '#ef4444'; // Red for poor scores
+    if (score < 8) return '#f97316'; // Orange for mediocre scores
+    return '#22c55e'; // Green for good scores
   };
 
   return (
@@ -143,16 +144,39 @@ const IdeaCard = ({
               </Typography>
             )}
             {evaluation && (
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  mt: 2, 
-                  color: getScoreColor(evaluation.overall_score),
-                  fontWeight: 'bold',
-                }}
-              >
-                Score: {evaluation.overall_score.toFixed(1)}
-              </Typography>
+              <Box sx={{ position: 'relative', display: 'inline-flex', mt: 2 }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={evaluation.overall_score * 10}
+                  size={60}
+                  thickness={4}
+                  sx={{
+                    color: getScoreColor(evaluation.overall_score),
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    borderRadius: '50%',
+                  }}
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: 'bold', color: 'white', lineHeight: 1 }}
+                  >
+                    {evaluation.overall_score.toFixed(1)}
+                  </Typography>
+                </Box>
+              </Box>
             )}
           </div>
           {(showSaveButton || showExpandOption) && (
