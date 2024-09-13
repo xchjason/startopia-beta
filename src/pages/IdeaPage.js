@@ -12,6 +12,9 @@ const IdeaPage = () => {
   const [evaluationExpanded, setEvaluationExpanded] = useState(false);
   const [planExpanded, setPlanExpanded] = useState(false);
   const [competitionExpanded, setCompetitionExpanded] = useState(false);
+  const [isGeneratingEvaluation, setIsGeneratingEvaluation] = useState(false);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [isGeneratingCompetitors, setIsGeneratingCompetitors] = useState(false);
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
@@ -27,53 +30,74 @@ const IdeaPage = () => {
 
   const evaluateIdea = async () => {
     if (!idea) return;
-    const evaluation = await evaluateIdeaAction({
-      idea_id: id,
-      title: idea.title,
-      description: idea.description,
-      problem: idea.problem,
-      solution: idea.solution,
-      category: idea.category,
-    });
-    await createScoreMutation({
-      idea_id: id,
-      evaluation: evaluation.evaluation,
-    });
-    setEvaluationExpanded(true);
+    setIsGeneratingEvaluation(true);
+    try {
+      const evaluation = await evaluateIdeaAction({
+        idea_id: id,
+        title: idea.title,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+        category: idea.category,
+      });
+      await createScoreMutation({
+        idea_id: id,
+        evaluation: evaluation.evaluation,
+      });
+      setEvaluationExpanded(true);
+    } catch (error) {
+      console.error("Error generating evaluation:", error);
+    } finally {
+      setIsGeneratingEvaluation(false);
+    }
   };
 
   const generatePlan = async () => {
     if (!idea) return;
-    const generatedPlan = await generatePlanAction({
-      idea_id: id,
-      title: idea.title,
-      description: idea.description,
-      problem: idea.problem,
-      solution: idea.solution,
-      category: idea.category,
-    });
-    const { idea_id, ...planDetails } = generatedPlan;
-    await createPlanMutation({
-      idea_id: id,
-      plan: planDetails,
-    });
-    setPlanExpanded(true);
+    setIsGeneratingPlan(true);
+    try {
+      const generatedPlan = await generatePlanAction({
+        idea_id: id,
+        title: idea.title,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+        category: idea.category,
+      });
+      const { idea_id, ...planDetails } = generatedPlan;
+      await createPlanMutation({
+        idea_id: id,
+        plan: planDetails,
+      });
+      setPlanExpanded(true);
+    } catch (error) {
+      console.error("Error generating plan:", error);
+    } finally {
+      setIsGeneratingPlan(false);
+    }
   };
 
   const generateCompetitors = async () => {
     if (!idea) return;
-    const generatedCompetitors = await generateCompetitorsAction({
-      title: idea.title,
-      category: idea.category,
-      description: idea.description,
-      problem: idea.problem,
-      solution: idea.solution,
-    });
-    await updateCompetitorsMutation({
-      ideaId: id,
-      competitors: generatedCompetitors,
-    });
-    setCompetitionExpanded(true);
+    setIsGeneratingCompetitors(true);
+    try {
+      const generatedCompetitors = await generateCompetitorsAction({
+        title: idea.title,
+        category: idea.category,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+      });
+      await updateCompetitorsMutation({
+        ideaId: id,
+        competitors: generatedCompetitors,
+      });
+      setCompetitionExpanded(true);
+    } catch (error) {
+      console.error("Error generating competitors:", error);
+    } finally {
+      setIsGeneratingCompetitors(false);
+    }
   };
 
   if (!id) {
@@ -102,10 +126,11 @@ const IdeaPage = () => {
     </div>
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
       onClick={evaluateIdea}
+      disabled={isGeneratingEvaluation}
     >
-      Evaluate Idea
+      {isGeneratingEvaluation ? 'Generating Evaluation...' : 'Evaluate Idea'}
     </button>
   );
 
@@ -137,21 +162,23 @@ const IdeaPage = () => {
     </div>
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
       onClick={generatePlan}
+      disabled={isGeneratingPlan}
     >
-      Generate Plan
+      {isGeneratingPlan ? 'Generating Plan...' : 'Generate Plan'}
     </button>
   );
 
-  const competitionContent = competitors ? (
+  const competitionContent = competitors && competitors.length > 0 ? (
     <CompetitionChart competitors={competitors} />
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
       onClick={generateCompetitors}
+      disabled={isGeneratingCompetitors}
     >
-      Generate Competitors
+      {isGeneratingCompetitors ? 'Generating Competitors...' : 'Generate Competitors'}
     </button>
   );
 

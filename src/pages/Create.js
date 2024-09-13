@@ -86,7 +86,8 @@ const Create = () => {
         solution: idea.solution,
         category: idea.category,
         score_id: idea.score_id || "",
-        plan_id: idea.plan_id || ""
+        plan_id: idea.plan_id || "",
+        competitors: "", // Add this line to include an empty string for competitors
       });
       alert(`Idea "${idea.title}" saved successfully!`);
     } catch (error) {

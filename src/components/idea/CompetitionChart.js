@@ -2,6 +2,10 @@ import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const CompetitionChart = ({ competitors }) => {
+  if (!competitors || competitors.length === 0) {
+    return <p>No competition data available.</p>;
+  }
+
   const renderScatterPoint = (props) => {
     const { cx, cy, payload } = props;
     return (
