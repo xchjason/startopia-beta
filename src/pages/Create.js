@@ -128,7 +128,17 @@ const Create = () => {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, bgcolor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Paper elevation={3} sx={{ 
+            p: 3, 
+            bgcolor: 'rgba(30, 41, 59, 0.8)',
+            borderRadius: 2,
+            border: '1px solid transparent',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }
+          }}>
             <TextField
               fullWidth
               label="Idea Statement"
@@ -142,7 +152,17 @@ const Create = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, bgcolor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Paper elevation={3} sx={{ 
+            p: 3, 
+            bgcolor: 'rgba(30, 41, 59, 0.8)',
+            borderRadius: 2,
+            border: '1px solid transparent',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }
+          }}>
             <Box mt={2}>
               <Typography gutterBottom sx={{ color: 'white' }}>Technical Complexity</Typography>
               <Slider

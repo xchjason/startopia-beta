@@ -62,7 +62,7 @@ const IdeaCard = ({
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: idea._id });
 
   const getScoreColor = (score) => {
-    if (score < 5) return '#ef4444'; // Red for poor scores
+    if (score < 7) return '#ef4444'; // Red for poor scores
     if (score < 8) return '#f97316'; // Orange for mediocre scores
     return '#22c55e'; // Green for good scores
   };
