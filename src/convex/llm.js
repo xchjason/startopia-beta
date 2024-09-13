@@ -121,7 +121,8 @@ const ScoreSchema = z.object({
       Solution: ${args.solution}
       Category: ${args.category}
 
-      Please provide scores (0-10) and explanations for the following criteria:
+      Please provide scores (0-10) and explanations for the following criteria
+      (be critical and don't be afraid to give scores lower than 5):
       1. Innovation
       2. Market Fit
       3. Feasibility
@@ -229,11 +230,13 @@ const ScoreSchema = z.object({
   
       For the main idea and each competitor, provide:
       1. The name (use "${args.title}" for the main idea, real company names for competitors)
-      2. An innovation score (1-10, where 10 is most innovative)
-      3. A market fit score (1-10, where 10 is best fit for the problem, be critical)
+      2. An Visision Completeness score (1-10, where 10 is the most complete vision, don't be afraid to give lower scores)
+      3. A Execution Ability score (1-10, where 10 is the highest execution ability, don't be afraid to give lower scores)
       4. Whether it's the main idea (true) or a competitor (false)
   
-      Ensure the competitors are diverse in their approach and market position. Be critical in scoring (some scores must be lower than 5).`;
+      Ensure the competitors are diverse in their approach and market position. 
+      Double check the competitors are companies that do exisit in real life.
+      Be critical in scoring (some companies must get scores lower than 4 for vision completeness and execution ability for differentiation).`;
   
       const completion = await openai.beta.chat.completions.parse({
         model: "gpt-4o-mini-2024-07-18",
