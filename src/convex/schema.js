@@ -17,6 +17,7 @@ export default defineSchema({
     category: v.string(),
     score_id: v.optional(v.union(v.id("scores"), v.string())),
     plan_id: v.optional(v.union(v.id("plans"), v.string())),
+    competitors: v.optional(v.string()),
   }),
   scores: defineTable({
     idea_id: v.id("ideas"),

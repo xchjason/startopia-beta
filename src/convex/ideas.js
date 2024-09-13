@@ -11,9 +11,10 @@ export const createIdea = mutation({
     solution: v.string(),
     category: v.string(),
     score_id: v.optional(v.string()),
-    plan_id: v.optional(v.string())
+    plan_id: v.optional(v.string()),
+    competitors: v.optional(v.string()),
   },
-  handler: async (ctx, { user_id, title, description, problem, solution, category, score_id = "", plan_id = "" }) => {
+  handler: async (ctx, { user_id, title, description, problem, solution, category, score_id = "", plan_id = "", competitors = null }) => {
     const idea = {
       user_id,
       title,
@@ -22,7 +23,8 @@ export const createIdea = mutation({
       solution,
       category,
       score_id,
-      plan_id
+      plan_id,
+      competitors,
     };
 
     return await ctx.db.insert("ideas", idea);
@@ -40,25 +42,22 @@ export const updateIdea = mutation({
     solution: v.optional(v.string()),
     category: v.optional(v.string()),
     score_id: v.optional(v.string()),
-    plan_id: v.optional(v.string())
+    plan_id: v.optional(v.string()),
+    competitors: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { ideaId, user_id, ...updates } = args;
 
-    // Fetch the idea from the database
     const idea = await ctx.db.get(ideaId);
 
-    // Check if the user_id matches the user_id of the idea
     if (idea.user_id !== user_id) {
       throw new Error("Unauthorized: You can only update your own ideas.");
     }
 
-    // Remove undefined values from updates
     const filteredUpdates = Object.fromEntries(
       Object.entries(updates).filter(([_, v]) => v !== undefined)
     );
 
-    // Proceed with the update
     return await ctx.db.patch(ideaId, filteredUpdates);
   }
 });
@@ -75,10 +74,16 @@ export const deleteIdea = mutation({
 export const getIdeasByUser = query({
   args: { user_id: v.string() },
   handler: async (ctx, { user_id }) => {
-
-    const ideas = await ctx.db.query("ideas").filter(q => q.eq(q.field("user_id"), user_id)).collect();
+    const ideas = await ctx.db.query("ideas")
+      .filter(q => q.eq(q.field("user_id"), user_id))
+      .collect();
     
-    return ideas;
+    return ideas.map(idea => {
+      if (idea.competitors) {
+        idea.competitors = JSON.parse(idea.competitors);
+      }
+      return idea;
+    });
   }
 });
 
@@ -86,18 +91,28 @@ export const getIdeasByUser = query({
 export const getIdeaById = query({
   args: { ideaId: v.id("ideas") },
   handler: async (ctx, { ideaId }) => {
-    return await ctx.db.get(ideaId);
+    const idea = await ctx.db.get(ideaId);
+    if (idea && idea.competitors) {
+      idea.competitors = JSON.parse(idea.competitors);
+    }
+    return idea;
   }
 });
 
+// Query to get all ideas
 export const getAllIdeas = query({
   handler: async (ctx) => {
     const ideas = await ctx.db.query("ideas").collect();
-    console.log(`All ideas: ${JSON.stringify(ideas)}`);
-    return ideas;
+    return ideas.map(idea => {
+      if (idea.competitors) {
+        idea.competitors = JSON.parse(idea.competitors);
+      }
+      return idea;
+    });
   }
 });
 
+// Mutation to create or update a score
 export const createScore = mutation({
   args: {
     idea_id: v.id("ideas"),
@@ -118,7 +133,9 @@ export const createScore = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const existingScore = await ctx.db.query("scores").filter(q => q.eq(q.field("idea_id"), args.idea_id)).first();
+    const existingScore = await ctx.db.query("scores")
+      .filter(q => q.eq(q.field("idea_id"), args.idea_id))
+      .first();
 
     if (existingScore) {
       await ctx.db.patch(existingScore._id, {
@@ -131,7 +148,6 @@ export const createScore = mutation({
         ...args.evaluation
       });
 
-      // Update the idea with the new score_id
       await ctx.db.patch(args.idea_id, { score_id: scoreId });
 
       return scoreId;
@@ -139,7 +155,7 @@ export const createScore = mutation({
   },
 });
 
-// Mutation to create a new plan
+// Mutation to create or update a plan
 export const createPlan = mutation({
   args: {
     idea_id: v.id("ideas"),
@@ -151,7 +167,9 @@ export const createPlan = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const existingPlan = await ctx.db.query("plans").filter(q => q.eq(q.field("idea_id"), args.idea_id)).first();
+    const existingPlan = await ctx.db.query("plans")
+      .filter(q => q.eq(q.field("idea_id"), args.idea_id))
+      .first();
 
     if (existingPlan) {
       await ctx.db.patch(existingPlan._id, {
@@ -164,7 +182,6 @@ export const createPlan = mutation({
         ...args.plan
       });
 
-      // Update the idea with the new plan_id
       await ctx.db.patch(args.idea_id, { plan_id: planId });
 
       return planId;
@@ -190,4 +207,29 @@ export const getPlan = query({
     if (!idea || !idea.plan_id) return null;
     return await ctx.db.get(idea.plan_id);
   }
+});
+
+// Mutation to update competitors for an idea
+export const updateCompetitors = mutation({
+  args: {
+    ideaId: v.id("ideas"),
+    competitors: v.array(v.object({
+      name: v.string(),
+      VisionCompleteness: v.number(),
+      ExecutionAbility: v.number(),
+      isMainIdea: v.boolean()
+    }))
+  },
+  handler: async (ctx, { ideaId, competitors }) => {
+    return await ctx.db.patch(ideaId, { competitors: JSON.stringify(competitors) });
+  },
+});
+
+// Query to get competitors for a specific idea
+export const getCompetitors = query({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, { ideaId }) => {
+    const idea = await ctx.db.get(ideaId);
+    return idea?.competitors ? JSON.parse(idea.competitors) : [];
+  },
 });

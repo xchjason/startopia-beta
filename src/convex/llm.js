@@ -200,8 +200,8 @@ const ScoreSchema = z.object({
 
   const CompetitorSchema = z.object({
     name: z.string(),
-    innovationScore: z.number().int(),
-    marketFitScore: z.number().int(),
+    VisionCompleteness: z.number().int(),
+    ExecutionAbility: z.number().int(),
     isMainIdea: z.boolean()
   });
   
@@ -233,7 +233,7 @@ const ScoreSchema = z.object({
       3. A market fit score (1-10, where 10 is best fit for the problem, be critical)
       4. Whether it's the main idea (true) or a competitor (false)
   
-      Ensure the competitors are diverse in their approach and market position. Be critical in scoring.`;
+      Ensure the competitors are diverse in their approach and market position. Be critical in scoring (some scores must be lower than 5).`;
   
       const completion = await openai.beta.chat.completions.parse({
         model: "gpt-4o-mini-2024-07-18",
