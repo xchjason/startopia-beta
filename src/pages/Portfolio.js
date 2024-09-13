@@ -4,6 +4,7 @@ import { api } from '../convex/_generated/api';
 import IdeaCard from '../components/card/IdeaCard';
 import { CircularProgress, Box, Typography, Grid } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Chip } from '@mui/material';
 
 const Portfolio = () => {
   const { user } = useAuth0();
@@ -37,11 +38,25 @@ const Portfolio = () => {
         <Grid container spacing={3} justifyContent="center">
           {sortedIdeas.map((idea) => (
             <Grid item xs={12} sm={6} md={4} key={idea._id}>
-              <IdeaCard 
-                idea={idea} 
-                showSaveButton={false} 
-                showExpandOption={false}
-              />
+              <Box position="relative">
+                <IdeaCard 
+                  idea={idea} 
+                  showSaveButton={false} 
+                  showExpandOption={false}
+                />
+                <Chip
+                  label={idea.category}
+                  size="small"
+                  sx={{
+                    position: 'absolute',
+                    bottom: 8,
+                    right: 8,
+                    zIndex: 20,
+                    backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                    color: 'white',
+                  }}
+                />
+              </Box>
             </Grid>
           ))}
         </Grid>
