@@ -5,20 +5,25 @@ import { api } from '../convex/_generated/api';
 import ExpandableSection from '../components/idea/ExpandableSection';
 import IdeaDetails from '../components/idea/IdeaDetails';
 import ScoreChart from '../components/idea/ScoreChart';
+import CompetitionChart from '../components/idea/CompetitionChart';
 
 const IdeaPage = () => {
   const { id } = useParams();
   const [evaluationExpanded, setEvaluationExpanded] = useState(false);
   const [planExpanded, setPlanExpanded] = useState(false);
+  const [competitionExpanded, setCompetitionExpanded] = useState(false);
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
   const plan = useQuery(api.ideas.getPlan, { ideaId: id });
+  const competitors = useQuery(api.ideas.getCompetitors, { ideaId: id });
 
   const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
   const generatePlanAction = useAction(api.llm.generatePlan);
+  const generateCompetitorsAction = useAction(api.llm.generateCompetitors);
   const createScoreMutation = useMutation(api.ideas.createScore);
   const createPlanMutation = useMutation(api.ideas.createPlan);
+  const updateCompetitorsMutation = useMutation(api.ideas.updateCompetitors);
 
   const evaluateIdea = async () => {
     if (!idea) return;
@@ -53,6 +58,22 @@ const IdeaPage = () => {
       plan: planDetails,
     });
     setPlanExpanded(true);
+  };
+
+  const generateCompetitors = async () => {
+    if (!idea) return;
+    const generatedCompetitors = await generateCompetitorsAction({
+      title: idea.title,
+      category: idea.category,
+      description: idea.description,
+      problem: idea.problem,
+      solution: idea.solution,
+    });
+    await updateCompetitorsMutation({
+      ideaId: id,
+      competitors: generatedCompetitors,
+    });
+    setCompetitionExpanded(true);
   };
 
   if (!id) {
@@ -123,6 +144,17 @@ const IdeaPage = () => {
     </button>
   );
 
+  const competitionContent = competitors ? (
+    <CompetitionChart competitors={competitors} />
+  ) : (
+    <button
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+      onClick={generateCompetitors}
+    >
+      Generate Competitors
+    </button>
+  );
+
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -139,6 +171,12 @@ const IdeaPage = () => {
             content={planContent}
             isExpanded={planExpanded}
             onToggle={() => setPlanExpanded(!planExpanded)}
+          />
+          <ExpandableSection
+            title="Competition"
+            content={competitionContent}
+            isExpanded={competitionExpanded}
+            onToggle={() => setCompetitionExpanded(!competitionExpanded)}
           />
         </div>
       </div>
