@@ -14,7 +14,7 @@ export const createIdea = mutation({
     plan_id: v.optional(v.string()),
     competitors: v.optional(v.string()),
   },
-  handler: async (ctx, { user_id, title, description, problem, solution, category, score_id = "", plan_id = "", competitors = null }) => {
+  handler: async (ctx, { user_id, title, description, problem, solution, category, score_id = "", plan_id = "", competitors = "" }) => {
     const idea = {
       user_id,
       title,

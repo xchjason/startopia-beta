@@ -36,7 +36,22 @@ const ScoreChart = ({ scores }) => {
       },
     },
     yaxis: {
-      show: false, // Hide y-axis labels
+      min: 0,
+      max: 10,
+      tickAmount: 0,
+      labels: {
+        formatter: function(val, i) {
+          if (i % 2 === 0) {
+            return val.toFixed(0);
+          } else {
+            return '';
+          }
+        },
+        style: {
+          colors: 'transparent',
+          fontSize: '1px',
+        },
+      },
     },
     plotOptions: {
       radar: {
@@ -55,7 +70,7 @@ const ScoreChart = ({ scores }) => {
       colors: ['#4299e1'], // Keeping the line color blue
     },
     fill: {
-      opacity: 0.8,
+      opacity: 0.5,
     },
     markers: {
       size: 4,
