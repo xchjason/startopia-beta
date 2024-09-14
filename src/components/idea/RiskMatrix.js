@@ -48,7 +48,7 @@ const RiskMatrix = ({ risks, title }) => {
     }
   };
 
-  const splitLabel = (label, maxLength = 10) => {
+  const splitLabel = (label, maxLength = 20) => {
     if (typeof label !== 'string' || label.length <= maxLength) return label;
     const words = label.split(' ');
     let lines = [];
@@ -108,7 +108,11 @@ const RiskMatrix = ({ risks, title }) => {
           return Array.isArray(labels) ? (
             <tspan>
               {labels.map((line, i) => (
-                <tspan key={i} x="0" dy={i === 0 ? 0 : 12}>
+                <tspan 
+                  key={i} 
+                  x="0" 
+                  dy={i === 0 ? -20 : 12} // Move first line up by 6 units
+                >
                   {line}
                 </tspan>
               ))}
