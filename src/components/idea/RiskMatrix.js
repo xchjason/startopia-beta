@@ -3,9 +3,9 @@ import { ResponsiveHeatMap } from '@nivo/heatmap';
 
 const RiskMatrix = ({ risks, title }) => {
   // Transform risks data into the format expected by Nivo
-  const data = Array(5).fill().map((_, i) => ({
-    id: 5 - i, // Reverse the order for correct y-axis representation
-    data: Array(5).fill().map((_, j) => ({
+  const data = Array(3).fill().map((_, i) => ({
+    id: 3 - i, // Reverse the order for correct y-axis representation
+    data: Array(3).fill().map((_, j) => ({
       x: j + 1,
       y: 0, // Default value
     }))
@@ -75,8 +75,8 @@ const RiskMatrix = ({ risks, title }) => {
           if (typeof cell.data.y === 'string' && cell.data.y !== '0') {
             const risk = cell.data.risk;
             const score = risk.impact * risk.likelihood;
-            if (score > 15) return "#ff6666";
-            if (score > 8) return "#ffcc66";
+            if (score > 9) return "#ff6666";
+            if (score > 4) return "#ffcc66";
             return "#66cc66";
           }
           return '#444444';
