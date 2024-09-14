@@ -81,15 +81,16 @@ const RiskMatrix = ({ risks, title }) => {
       <h2 className="text-xl font-bold text-center text-white mb-4">{title}</h2>
       <ResponsiveHeatMap
         data={data}
-        margin={{ top: 60, right: 60, bottom: 60, left: 60 }}
+        margin={{ top: 20, right: 60, bottom: 90, left: 60 }} // Reduced top margin
         valueFormat=">-.2s"
-        axisTop={{
+        axisTop={null} // Remove the top axis configuration
+        axisBottom={{ // Add bottom axis configuration
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
           legend: 'Impact',
           legendPosition: 'middle',
-          legendOffset: -40
+          legendOffset: 40 // Adjust offset as needed
         }}
         axisLeft={{
           tickSize: 5,
