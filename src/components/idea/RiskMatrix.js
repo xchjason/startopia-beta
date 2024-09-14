@@ -48,6 +48,24 @@ const RiskMatrix = ({ risks, title }) => {
     }
   };
 
+  const splitLabel = (label, maxLength = 10) => {
+    if (typeof label !== 'string' || label.length <= maxLength) return label;
+    const words = label.split(' ');
+    let lines = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+      if ((currentLine + word).length > maxLength) {
+        lines.push(currentLine.trim());
+        currentLine = word + ' ';
+      } else {
+        currentLine += word + ' ';
+      }
+    });
+    lines.push(currentLine.trim());
+    return lines;
+  };
+
   return (
     <div style={{ height: '500px', width: '100%' }}>
       <h2 className="text-xl font-bold text-center text-white mb-4">{title}</h2>
@@ -85,7 +103,18 @@ const RiskMatrix = ({ risks, title }) => {
         borderColor="#000000"
         borderWidth={1}
         enableLabels={true}
-        label={(cell) => cell.data.y}
+        label={(cell) => {
+          const labels = splitLabel(cell.data.y);
+          return Array.isArray(labels) ? (
+            <tspan>
+              {labels.map((line, i) => (
+                <tspan key={i} x="0" dy={i === 0 ? 0 : 12}>
+                  {line}
+                </tspan>
+              ))}
+            </tspan>
+          ) : labels;
+        }}
         labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
         legends={[]}
         annotations={risks.map(risk => ({
