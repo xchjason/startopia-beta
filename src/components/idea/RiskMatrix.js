@@ -174,10 +174,6 @@ const RiskMatrix = ({ risks, title }) => {
             <div style={{ background: '#333', padding: '12px', borderRadius: '4px', color: 'white' }}>
               <strong>{cell.data.risk.factor}</strong>
               <br />
-              Impact: {cell.data.risk.impact}
-              <br />
-              Likelihood: {cell.data.risk.likelihood}
-              <br />
               Mitigation: {cell.data.risk.mitigation}
             </div>
           ) : null
