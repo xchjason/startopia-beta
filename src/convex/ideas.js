@@ -233,3 +233,26 @@ export const getCompetitors = query({
     return idea?.competitors ? JSON.parse(idea.competitors) : [];
   },
 });
+
+export const getRisks = query({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, args) => {
+    const idea = await ctx.db.get(args.ideaId);
+    return idea?.risk ? JSON.parse(idea.risk) : null;
+  },
+});
+
+export const updateRisks = mutation({
+  args: { 
+    ideaId: v.id("ideas"),
+    risks: v.array(v.object({
+      factor: v.string(),
+      impact: v.number(),
+      likelihood: v.number(),
+      mitigation: v.string(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.ideaId, { risk: JSON.stringify(args.risks) });
+  },
+});

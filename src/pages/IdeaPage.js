@@ -6,6 +6,7 @@ import ExpandableSection from '../components/idea/ExpandableSection';
 import IdeaDetails from '../components/idea/IdeaDetails';
 import ScoreChart from '../components/idea/ScoreChart';
 import CompetitionChart from '../components/idea/CompetitionChart';
+import RiskMatrix from '../components/idea/RiskMatrix';
 
 const IdeaPage = () => {
   const { id } = useParams();
@@ -15,11 +16,14 @@ const IdeaPage = () => {
   const [isGeneratingEvaluation, setIsGeneratingEvaluation] = useState(false);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [isGeneratingCompetitors, setIsGeneratingCompetitors] = useState(false);
+  const [riskExpanded, setRiskExpanded] = useState(false);
+  const [isGeneratingRisks, setIsGeneratingRisks] = useState(false);
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
   const plan = useQuery(api.ideas.getPlan, { ideaId: id });
   const competitors = useQuery(api.ideas.getCompetitors, { ideaId: id });
+  const risks = useQuery(api.ideas.getRisks, { ideaId: id });
 
   const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
   const generatePlanAction = useAction(api.llm.generatePlan);
@@ -27,6 +31,8 @@ const IdeaPage = () => {
   const createScoreMutation = useMutation(api.ideas.createScore);
   const createPlanMutation = useMutation(api.ideas.createPlan);
   const updateCompetitorsMutation = useMutation(api.ideas.updateCompetitors);
+  const generateRiskAssessmentAction = useAction(api.llm.generateRiskAssessment);
+  const updateRisksMutation = useMutation(api.ideas.updateRisks);
 
   const evaluateIdea = async () => {
     if (!idea) return;
@@ -97,6 +103,29 @@ const IdeaPage = () => {
       console.error("Error generating competitors:", error);
     } finally {
       setIsGeneratingCompetitors(false);
+    }
+  };
+
+  const generateRiskAssessment = async () => {
+    if (!idea) return;
+    setIsGeneratingRisks(true);
+    try {
+      const generatedRisks = await generateRiskAssessmentAction({
+        title: idea.title,
+        category: idea.category,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+      });
+      await updateRisksMutation({
+        ideaId: id,
+        risks: generatedRisks,
+      });
+      setRiskExpanded(true);
+    } catch (error) {
+      console.error("Error generating risk assessment:", error);
+    } finally {
+      setIsGeneratingRisks(false);
     }
   };
 
@@ -182,6 +211,18 @@ const IdeaPage = () => {
     </button>
   );
 
+  const riskContent = risks ? (
+    <RiskMatrix risks={risks} title={`Risk Assessment - ${idea.title}`} />
+  ) : (
+    <button
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      onClick={generateRiskAssessment}
+      disabled={isGeneratingRisks}
+    >
+      {isGeneratingRisks ? 'Generating Risk Assessment...' : 'Generate Risk Assessment'}
+    </button>
+  );
+
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -198,6 +239,12 @@ const IdeaPage = () => {
             content={competitionContent}
             isExpanded={competitionExpanded}
             onToggle={() => setCompetitionExpanded(!competitionExpanded)}
+          />
+          <ExpandableSection
+            title="Risk"
+            content={riskContent}
+            isExpanded={riskExpanded}
+            onToggle={() => setRiskExpanded(!riskExpanded)}
           />
           <ExpandableSection
             title="Plan"
