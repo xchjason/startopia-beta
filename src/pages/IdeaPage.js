@@ -212,7 +212,7 @@ const IdeaPage = () => {
   );
 
   const riskContent = risks ? (
-    <RiskMatrix risks={risks} title={`Risk Assessment - ${idea.title}`} />
+    <RiskMatrix risks={risks} title={`Risk Assessment Matrix`} />
   ) : (
     <button
       className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"

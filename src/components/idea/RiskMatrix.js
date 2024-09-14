@@ -39,13 +39,13 @@ const RiskMatrix = ({ risks, title }) => {
           strokeWidth: 1
         },
         text: {
-          fill: "#ffffff", // Change tick labels to white
+          fill: "#666666", // Change tick labels to slightly darker gray
           fontSize: 14 // Increase tick label font size
         }
       },
       legend: {
         text: {
-          fill: "#ffffff", // Change legend labels to white
+          fill: "#666666", // Change legend labels to slightly darker gray
           fontSize: 16 // Increase legend label font size
         }
       }
@@ -107,9 +107,9 @@ const RiskMatrix = ({ risks, title }) => {
             if (score > 4) return "#ffcc66";
             return "#66cc66";
           }
-          return '#444444';
+          return '#666666'; // Slightly lighter gray for empty cells
         }}
-        emptyColor="#444444"
+        emptyColor="#666666" // Slightly lighter gray for empty cells
         borderColor="#000000"
         borderWidth={1}
         enableLabels={true}
