@@ -7,7 +7,7 @@ const RiskMatrix = ({ risks, title }) => {
     id: 3 - i, // Reverse the order for correct y-axis representation
     data: Array(3).fill().map((_, j) => ({
       x: j + 1,
-      y: 0, // Default value
+      y: '', // Default value
     }))
   }));
 
@@ -90,7 +90,7 @@ const RiskMatrix = ({ risks, title }) => {
           legendOffset: -40
         }}
         colors={(cell) => {
-          if (typeof cell.data.y === 'string' && cell.data.y !== '0') {
+          if (cell.data.y !== '') {
             const risk = cell.data.risk;
             const score = risk.impact * risk.likelihood;
             if (score > 9) return "#ff6666";
