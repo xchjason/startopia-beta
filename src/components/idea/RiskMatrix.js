@@ -37,6 +37,16 @@ const RiskMatrix = ({ risks, title }) => {
         line: {
           stroke: "#777777",
           strokeWidth: 1
+        },
+        text: {
+          fill: "#ffffff", // Change tick labels to white
+          fontSize: 14 // Increase tick label font size
+        }
+      },
+      legend: {
+        text: {
+          fill: "#ffffff", // Change legend labels to white
+          fontSize: 16 // Increase legend label font size
         }
       }
     },
@@ -111,13 +121,16 @@ const RiskMatrix = ({ risks, title }) => {
                 <tspan 
                   key={i} 
                   x="0" 
-                  dy={i === 0 ? -20 : 12} // Move first line up by 6 units
+                  dy={i === 0 ? -20 : 20} // Further increase line spacing
+                  style={{ fontSize: 16 }} // Increase font size
                 >
                   {line}
                 </tspan>
               ))}
             </tspan>
-          ) : labels;
+          ) : (
+            <tspan style={{ fontSize: 16 }}>{labels}</tspan> // Increase font size
+          );
         }}
         labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
         legends={[]}
