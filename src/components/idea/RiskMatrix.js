@@ -58,7 +58,7 @@ const RiskMatrix = ({ risks, title }) => {
     }
   };
 
-  const splitLabel = (label, maxLength = 20) => {
+  const splitLabel = (label, maxLength = 17) => {
     if (typeof label !== 'string' || label.length <= maxLength) return label;
     const words = label.split(' ');
     let lines = [];
