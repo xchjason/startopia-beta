@@ -288,8 +288,8 @@ const ScoreSchema = z.object({
   
       Please provide 5 key risk factors. For each risk factor, include:
       1. A specifc risk factor name (not large picture risk factors like market risk, but more specific)
-      2. Impact score (1-5, where 5 is highest impact)
-      3. Likelihood score (1-5, where 5 is most likely)
+      2. Impact score (1-3, where 3 is highest impact)
+      3. Likelihood score (1-3, where 3 is most likely)
       4. A brief yet non-generic mitigation strategy
   
       Ensure the risks are diverse and cover different aspects of the business (e.g., market, technical, financial, operational, legal).

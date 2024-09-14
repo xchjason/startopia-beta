@@ -17,7 +17,7 @@ const RiskMatrix = ({ risks, title }) => {
     if (row) {
       const cell = row.data.find(d => d.x === risk.impact);
       if (cell) {
-        cell.y = 1; // Mark as filled
+        cell.y = risk.factor; // Display the factor name instead of 1
         cell.risk = risk; // Store the entire risk object for tooltip
       }
     }
@@ -72,18 +72,21 @@ const RiskMatrix = ({ risks, title }) => {
           legendOffset: -40
         }}
         colors={(cell) => {
-          if (cell.data.y === 0) return '#444444';
-          const risk = cell.data.risk;
-          const score = risk.impact * risk.likelihood;
-          if (score > 15) return "#ff6666";
-          if (score > 8) return "#ffcc66";
-          return "#66cc66";
+          if (typeof cell.data.y === 'string' && cell.data.y !== '0') {
+            const risk = cell.data.risk;
+            const score = risk.impact * risk.likelihood;
+            if (score > 15) return "#ff6666";
+            if (score > 8) return "#ffcc66";
+            return "#66cc66";
+          }
+          return '#444444';
         }}
         emptyColor="#444444"
         borderColor="#000000"
         borderWidth={1}
         enableLabels={true}
-        labelTextColor="#000000"
+        label={(cell) => cell.data.y}
+        labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
         legends={[]}
         annotations={risks.map(risk => ({
           type: 'rect',
