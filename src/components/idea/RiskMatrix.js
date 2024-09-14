@@ -84,21 +84,37 @@ const RiskMatrix = ({ risks, title }) => {
         margin={{ top: 20, right: 60, bottom: 90, left: 60 }} // Reduced top margin
         valueFormat=">-.2s"
         axisTop={null} // Remove the top axis configuration
-        axisBottom={{ // Add bottom axis configuration
-          tickSize: 5,
+        axisBottom={{
+          tickSize: 0, // Remove tick size
           tickPadding: 5,
           tickRotation: 0,
+          format: d => {
+            switch (d) {
+              case 1: return 'Low';
+              case 2: return 'Medium';
+              case 3: return 'High';
+              default: return '';
+            }
+          },
           legend: 'Impact',
           legendPosition: 'middle',
           legendOffset: 40 // Adjust offset as needed
         }}
         axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
+          tickSize: 0, // Remove tick size
+          tickPadding: 20, // Adjust padding to move labels up
+          tickRotation: -90, // Rotate labels by 90 degrees
+          format: d => {
+            switch (d) {
+              case 1: return 'Low';
+              case 2: return 'Medium';
+              case 3: return 'High';
+              default: return '';
+            }
+          },
           legend: 'Likelihood',
           legendPosition: 'middle',
-          legendOffset: -40
+          legendOffset: -50 // Move legend (and labels) to the right
         }}
         colors={(cell) => {
           if (cell.data.y !== '') {
