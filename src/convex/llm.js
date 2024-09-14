@@ -258,3 +258,53 @@ const ScoreSchema = z.object({
       return competitors;
     },
   });
+
+  const RiskFactorSchema = z.object({
+    factor: z.string(),
+    impact: z.number().int(),
+    likelihood: z.number().int(),
+    mitigation: z.string(),
+  });
+  
+  const RiskAssessmentSchema = z.object({
+    risks: z.array(RiskFactorSchema)
+  });
+  
+  export const generateRiskAssessment = action({
+    args: { 
+      title: v.string(),
+      category: v.string(),
+      description: v.string(),
+      problem: v.string(),
+      solution: v.string(),
+    },
+    handler: async (_, args) => {
+      const prompt = `Generate a risk assessment for the following startup idea:
+      Title: ${args.title}
+      Category: ${args.category}
+      Description: ${args.description}
+      Problem: ${args.problem}
+      Solution: ${args.solution}
+  
+      Please provide 5 key risk factors. For each risk factor, include:
+      1. A specifc risk factor name (not large picture risk factors like market risk, but more specific)
+      2. Impact score (1-5, where 5 is highest impact)
+      3. Likelihood score (1-5, where 5 is most likely)
+      4. A brief yet non-generic mitigation strategy
+  
+      Ensure the risks are diverse and cover different aspects of the business (e.g., market, technical, financial, operational, legal).
+      Ensure each risk factors have different impact scores`;
+  
+      const completion = await openai.beta.chat.completions.parse({
+        model: "gpt-4o-mini-2024-07-18",
+        messages: [
+          { role: "system", content: "You are an expert in startup risk assessment. Provide a detailed, objective risk analysis." },
+          { role: "user", content: prompt },
+        ],
+        response_format: zodResponseFormat(RiskAssessmentSchema, "risks"),
+      });
+  
+      const { risks } = completion.choices[0].message.parsed;
+      return risks;
+    },
+  });

@@ -2,12 +2,6 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  users: defineTable({
-    auth0UserId: v.string(),
-    name: v.string(),
-    email: v.string(),
-    saved_ideas: v.optional(v.array(v.string())),
-  }),
   ideas: defineTable({
     user_id: v.string(),
     title: v.string(),
@@ -18,6 +12,7 @@ export default defineSchema({
     score_id: v.optional(v.union(v.id("scores"), v.string())),
     plan_id: v.optional(v.union(v.id("plans"), v.string())),
     competitors: v.optional(v.string()),
+    risk: v.optional(v.string()),
   }),
   scores: defineTable({
     idea_id: v.id("ideas"),
@@ -41,5 +36,11 @@ export default defineSchema({
     talent: v.string(),
     finance: v.string(),
     legal: v.string(),
+  }),
+  users: defineTable({
+    auth0UserId: v.string(),
+    name: v.string(),
+    email: v.string(),
+    saved_ideas: v.optional(v.array(v.string())),
   }),
 });
