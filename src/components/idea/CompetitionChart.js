@@ -39,10 +39,11 @@ const CompetitionChart = ({ competitors }) => {
 
   return (
     <div className="w-full h-96 relative">
-      <ResponsiveContainer width="100%" height="100%">
+      <h2 className="text-center text-xl font-bold mb-1">Gartner Magic Quadrant</h2>
+      <ResponsiveContainer width="100%" height="95%">
         <ScatterChart
           margin={{
-            top: 20,
+            top: 5,
             right: 20,
             bottom: 20,
             left: 20,
