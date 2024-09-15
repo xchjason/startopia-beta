@@ -324,36 +324,59 @@ const IdeaPage = () => {
         <div>
           {editMode ? (
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg h-fit">
-              <input
-                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
-                name="title"
-                value={editedIdea.title}
-                onChange={handleInputChange}
-              />
-              <input
-                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
-                name="category"
-                value={editedIdea.category}
-                onChange={handleInputChange}
-              />
-              <textarea
-                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
-                name="description"
-                value={editedIdea.description}
-                onChange={handleInputChange}
-              />
-              <textarea
-                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
-                name="problem"
-                value={editedIdea.problem}
-                onChange={handleInputChange}
-              />
-              <textarea
-                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
-                name="solution"
-                value={editedIdea.solution}
-                onChange={handleInputChange}
-              />
+              <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">Title</label>
+                <input
+                  id="title"
+                  className="w-full bg-gray-700 text-white p-2 rounded"
+                  name="title"
+                  value={editedIdea.title}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                <textarea
+                  id="description"
+                  className="w-full bg-gray-700 text-white p-2 rounded"
+                  name="description"
+                  value={editedIdea.description}
+                  onChange={handleInputChange}
+                  rows="3"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="problem" className="block text-sm font-medium text-gray-300 mb-1">Problem</label>
+                <textarea
+                  id="problem"
+                  className="w-full bg-gray-700 text-white p-2 rounded"
+                  name="problem"
+                  value={editedIdea.problem}
+                  onChange={handleInputChange}
+                  rows="3"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="solution" className="block text-sm font-medium text-gray-300 mb-1">Solution</label>
+                <textarea
+                  id="solution"
+                  className="w-full bg-gray-700 text-white p-2 rounded"
+                  name="solution"
+                  value={editedIdea.solution}
+                  onChange={handleInputChange}
+                  rows="3"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-1">Category</label>
+                <input
+                  id="category"
+                  className="w-full bg-gray-700 text-white p-2 rounded"
+                  name="category"
+                  value={editedIdea.category}
+                  onChange={handleInputChange}
+                />
+              </div>
               <div className="flex justify-end space-x-2">
                 <button
                   className="px-4 py-2 bg-green-600 text-white rounded"
