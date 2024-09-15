@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 const CompetitionChart = ({ competitors }) => {
   if (!competitors || competitors.length === 0) {
@@ -35,7 +36,7 @@ const CompetitionChart = ({ competitors }) => {
   const otherCompetitors = competitors.filter(comp => !comp.isMainIdea);
 
   return (
-    <div className="w-full h-96">
+    <div className="w-full h-96 relative">
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart
           margin={{
@@ -87,6 +88,15 @@ const CompetitionChart = ({ competitors }) => {
           )}
         </ScatterChart>
       </ResponsiveContainer>
+      <a 
+        href="https://www.gartner.com/en/research/methodologies/magic-quadrants-research" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer z-10"
+        title="Learn about Magic Quadrant methodology"
+      >
+        <FaQuestionCircle size={20} />
+      </a>
     </div>
   );
 };
