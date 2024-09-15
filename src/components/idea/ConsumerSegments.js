@@ -51,7 +51,7 @@ const ConsumerSegments = ({ segments }) => {
               return null;
             }}
           />
-          <LabelList dataKey="name" position="inside" fill="#fff" />
+          <LabelList dataKey="name" position="inside" fill="#fff" style={{ textShadow: 'none' }} />
         </Treemap>
       </ResponsiveContainer>
     </div>

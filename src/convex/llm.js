@@ -334,7 +334,7 @@ const ScoreSchema = z.object({
       Problem: ${args.problem}
       Solution: ${args.solution}
   
-      Please provide the top 5 consumer segments for this idea. For each segment, include:
+      Please provide the top 4 consumer segments for this idea. For each segment, include:
       1. The consumer segment name
       2. The percentage of the total market this segment represents (ensure all percentages add up to 100%)
   
