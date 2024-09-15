@@ -127,7 +127,7 @@ const RiskMatrix = ({ risks, title }) => {
           return '#1A202C'; // Changed to match tooltip background color
         }}
         emptyColor="#1A202C" // Changed to match tooltip background color
-        borderColor="#000000"
+        borderColor="#2D3748" // Changed to a more subtle color
         borderWidth={1}
         enableLabels={true}
         label={(cell) => {
