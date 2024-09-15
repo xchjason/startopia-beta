@@ -256,3 +256,24 @@ export const updateRisks = mutation({
     await ctx.db.patch(args.ideaId, { risk: JSON.stringify(args.risks) });
   },
 });
+
+export const getConsumers = query({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, args) => {
+    const idea = await ctx.db.get(args.ideaId);
+    return idea?.consumers ? JSON.parse(idea.consumers) : null;
+  },
+});
+
+export const updateConsumers = mutation({
+  args: { 
+    ideaId: v.id("ideas"),
+    consumers: v.array(v.object({
+      name: v.string(),
+      percentage: v.number(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.ideaId, { consumers: JSON.stringify(args.consumers) });
+  },
+});

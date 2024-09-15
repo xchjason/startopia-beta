@@ -13,6 +13,7 @@ export default defineSchema({
     plan_id: v.optional(v.union(v.id("plans"), v.string())),
     competitors: v.optional(v.string()),
     risk: v.optional(v.string()),
+    consumers: v.optional(v.string()),
   }),
   scores: defineTable({
     idea_id: v.id("ideas"),

@@ -308,3 +308,48 @@ const ScoreSchema = z.object({
       return risks;
     },
   });
+
+  const ConsumerSegmentSchema = z.object({
+    name: z.string(),
+    percentage: z.number()
+  });
+  
+  const ConsumerSegmentAnalysisSchema = z.object({
+    segments: z.array(ConsumerSegmentSchema)
+  });
+  
+  export const generateConsumerSegments = action({
+    args: { 
+      title: v.string(),
+      category: v.string(),
+      description: v.string(),
+      problem: v.string(),
+      solution: v.string(),
+    },
+    handler: async (_, args) => {
+      const prompt = `Generate a consumer segment analysis for the following startup idea:
+      Title: ${args.title}
+      Category: ${args.category}
+      Description: ${args.description}
+      Problem: ${args.problem}
+      Solution: ${args.solution}
+  
+      Please provide the top 5 consumer segments for this idea. For each segment, include:
+      1. The consumer segment name
+      2. The percentage of the total market this segment represents (ensure all percentages add up to 100%)
+  
+      Ensure the segments are distinct and relevant to the startup idea.`;
+  
+      const completion = await openai.beta.chat.completions.parse({
+        model: "gpt-4o-mini-2024-07-18",
+        messages: [
+          { role: "system", content: "You are an expert in market analysis and consumer segmentation. Provide a detailed, objective consumer segment analysis." },
+          { role: "user", content: prompt },
+        ],
+        response_format: zodResponseFormat(ConsumerSegmentAnalysisSchema, "segments"),
+      });
+  
+      const { segments } = completion.choices[0].message.parsed;
+      return segments;
+    },
+  });

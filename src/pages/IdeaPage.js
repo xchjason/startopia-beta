@@ -7,6 +7,7 @@ import IdeaDetails from '../components/idea/IdeaDetails';
 import ScoreChart from '../components/idea/ScoreChart';
 import CompetitionChart from '../components/idea/CompetitionChart';
 import RiskMatrix from '../components/idea/RiskMatrix';
+import ConsumerSegments from '../components/idea/ConsumerSegments';
 
 const IdeaPage = () => {
   const { id } = useParams();
@@ -18,12 +19,16 @@ const IdeaPage = () => {
   const [isGeneratingCompetitors, setIsGeneratingCompetitors] = useState(false);
   const [riskExpanded, setRiskExpanded] = useState(false);
   const [isGeneratingRisks, setIsGeneratingRisks] = useState(false);
+  const [consumerExpanded, setConsumerExpanded] = useState(false);
+  const [isGeneratingConsumers, setIsGeneratingConsumers] = useState(false);
+
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
   const plan = useQuery(api.ideas.getPlan, { ideaId: id });
   const competitors = useQuery(api.ideas.getCompetitors, { ideaId: id });
   const risks = useQuery(api.ideas.getRisks, { ideaId: id });
+  const consumers = useQuery(api.ideas.getConsumers, { ideaId: id });
 
   const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
   const generatePlanAction = useAction(api.llm.generatePlan);
@@ -33,6 +38,8 @@ const IdeaPage = () => {
   const updateCompetitorsMutation = useMutation(api.ideas.updateCompetitors);
   const generateRiskAssessmentAction = useAction(api.llm.generateRiskAssessment);
   const updateRisksMutation = useMutation(api.ideas.updateRisks);
+  const generateConsumerSegmentsAction = useAction(api.llm.generateConsumerSegments);
+  const updateConsumersMutation = useMutation(api.ideas.updateConsumers);
 
   const evaluateIdea = async () => {
     if (!idea) return;
@@ -126,6 +133,29 @@ const IdeaPage = () => {
       console.error("Error generating risk assessment:", error);
     } finally {
       setIsGeneratingRisks(false);
+    }
+  };
+
+  const generateConsumerSegments = async () => {
+    if (!idea) return;
+    setIsGeneratingConsumers(true);
+    try {
+      const generatedConsumers = await generateConsumerSegmentsAction({
+        title: idea.title,
+        category: idea.category,
+        description: idea.description,
+        problem: idea.problem,
+        solution: idea.solution,
+      });
+      await updateConsumersMutation({
+        ideaId: id,
+        consumers: generatedConsumers,
+      });
+      setConsumerExpanded(true);
+    } catch (error) {
+      console.error("Error generating consumer segments:", error);
+    } finally {
+      setIsGeneratingConsumers(false);
     }
   };
 
@@ -223,6 +253,18 @@ const IdeaPage = () => {
     </button>
   );
 
+  const consumerContent = consumers ? (
+    <ConsumerSegments segments={consumers} />
+  ) : (
+    <button
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      onClick={generateConsumerSegments}
+      disabled={isGeneratingConsumers}
+    >
+      {isGeneratingConsumers ? 'Generating Consumer Segments...' : 'Generate Consumer Segments'}
+    </button>
+  );
+
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -239,6 +281,12 @@ const IdeaPage = () => {
             content={competitionContent}
             isExpanded={competitionExpanded}
             onToggle={() => setCompetitionExpanded(!competitionExpanded)}
+          />
+          <ExpandableSection
+            title="Consumer"
+            content={consumerContent}
+            isExpanded={consumerExpanded}
+            onToggle={() => setConsumerExpanded(!consumerExpanded)}
           />
           <ExpandableSection
             title="Risk"
