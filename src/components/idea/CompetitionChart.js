@@ -103,19 +103,19 @@ const CompetitionChart = ({ competitors }) => {
         </a>
         {showTooltip && (
           <div 
-            className="absolute right-0 mt-1 p-3 rounded-lg shadow-lg"
+            className="absolute right-0 mt-1 p-1 rounded-lg shadow-lg"
             style={{
               backgroundColor: '#1A202C',
               color: '#E2E8F0',
-              minWidth: '200px',
-              maxWidth: '300px',
-              fontSize: '14px',
+              width: '120px',
+              fontSize: '11px',
               whiteSpace: 'normal',
               wordBreak: 'break-word',
-              overflowWrap: 'break-word'
+              overflowWrap: 'break-word',
+              textAlign: 'center'
             }}
           >
-            Gartner Magic Quadrant, click to learn more
+            Click to learn more
           </div>
         )}
       </div>
