@@ -1,30 +1,36 @@
 import React from 'react';
-import { ResponsiveContainer, Tooltip, LabelList } from 'recharts';
-import { Treemap } from 'recharts/lib/chart/Treemap';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 const ConsumerSegments = ({ segments }) => {
-  const data = segments.map((segment, index) => ({
+  const data = segments.map((segment) => ({
     name: segment.name,
-    size: segment.percentage,
-    fill: COLORS[index % COLORS.length],
+    value: segment.percentage,
   }));
 
   return (
     <div className="h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <Treemap
-          data={data}
-          dataKey="size"
-          aspectRatio={4 / 3}
-          stroke="#fff"
-          fill="#8884d8"
-        >
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius="80%"
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            labelLine={false}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
           <Tooltip
             content={({ payload }) => {
               if (payload && payload.length > 0) {
-                const { name, size } = payload[0].payload;
+                const { name, value } = payload[0];
                 return (
                   <div style={{
                     minWidth: '200px',
@@ -43,7 +49,7 @@ const ConsumerSegments = ({ segments }) => {
                       margin: '0 0 8px 0'
                     }}>{name}</p>
                     <p style={{ margin: '0' }}>
-                      <strong>Percentage:</strong> {size}%
+                      <strong>Percentage:</strong> {value}%
                     </p>
                   </div>
                 );
@@ -51,8 +57,8 @@ const ConsumerSegments = ({ segments }) => {
               return null;
             }}
           />
-          <LabelList dataKey="name" position="inside" fill="#fff" style={{ textShadow: 'none' }} />
-        </Treemap>
+          <Legend />
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );
