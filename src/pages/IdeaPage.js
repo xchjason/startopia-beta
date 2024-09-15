@@ -422,7 +422,7 @@ const IdeaPage = () => {
                   Edit
                 </button>
                 <button
-                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors duration-200"
+                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded transition-colors duration-200"
                   onClick={handleDelete}
                 >
                   Delete
