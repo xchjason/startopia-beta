@@ -171,10 +171,23 @@ const RiskMatrix = ({ risks, title }) => {
         theme={theme}
         tooltip={({ cell }) => (
           cell.data.risk ? (
-            <div style={{ background: '#333', padding: '12px', borderRadius: '4px', color: 'white' }}>
-              <strong>{cell.data.risk.factor}</strong>
-              <br />
-              Mitigation: {cell.data.risk.mitigation}
+            <div style={{ 
+              background: '#1A202C', 
+              padding: '12px', 
+              borderRadius: '8px', 
+              color: '#E2E8F0',
+              minWidth: '200px',
+              maxWidth: '300px',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word'
+            }}>
+              <p style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 8px 0' }}>
+                {cell.data.risk.factor}
+              </p>
+              <p style={{ fontSize: '14px', margin: '0' }}>
+                <strong>Mitigation:</strong> {cell.data.risk.mitigation}
+              </p>
             </div>
           ) : null
         )}
