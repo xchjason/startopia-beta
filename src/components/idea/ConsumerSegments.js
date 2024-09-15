@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -57,7 +57,6 @@ const ConsumerSegments = ({ segments }) => {
               return null;
             }}
           />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
