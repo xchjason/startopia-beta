@@ -327,7 +327,7 @@ const IdeaPage = () => {
       onClick={generateConsumerSegments}
       disabled={isGeneratingConsumers}
     >
-      {isGeneratingConsumers ? 'Generating Consumer Segments...' : 'Generate Consumer Segments'}
+      {isGeneratingConsumers ? 'Generating Target Customers...' : 'Generate Target Customers'}
     </button>
   );
 
