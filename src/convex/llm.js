@@ -286,14 +286,16 @@ const ScoreSchema = z.object({
       Problem: ${args.problem}
       Solution: ${args.solution}
   
-      Please provide 3 key risk factors. For each risk factor, include:
+      Please provide 5 key risk factors. For each risk factor, include:
       1. A specifc risk factor name (not large picture risk factors like market risk, but more specific)
       2. Impact score (1-3, where 3 is highest impact)
       3. Likelihood score (1-3, where 3 is most likely)
       4. A brief yet non-generic mitigation strategy
   
       Ensure the risks are diverse and cover different aspects of the business (e.g., market, technical, financial, operational, legal).
-      Ensure each risk factors have different impact scores`;
+      Ensure each impact score has at least one risk factor.
+      Ensure each risk factors that have the same impact score have different likelihood scores
+      Ensure each risk factors that have the same likelihood score have different impact scores`;
   
       const completion = await openai.beta.chat.completions.parse({
         model: "gpt-4o-mini-2024-07-18",
@@ -334,8 +336,8 @@ const ScoreSchema = z.object({
       Problem: ${args.problem}
       Solution: ${args.solution}
   
-      Please provide the top 4 consumer segments for this idea. For each segment, include:
-      1. The consumer segment name
+      Please provide the top 4 or 5 consumer segments for this idea. For each segment, include:
+      1. The consumer segment name (keep the name concise but specific and non-generic, max 3 words)
       2. The percentage of the total market this segment represents (ensure all percentages add up to 100%)
   
       Ensure the segments are distinct and relevant to the startup idea.`;
