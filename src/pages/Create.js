@@ -8,12 +8,15 @@ import {
   Slider,
   Grid,
   Paper,
-  CircularProgress
+  CircularProgress,
+  Tooltip,
+  IconButton
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAction, useMutation, useQuery } from "convex/react"; 
 import { api } from "../convex/_generated/api";
 import CreateCard from "../components/card/CreateCard";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const Create = () => {
   const { user } = useAuth0();
@@ -139,16 +142,23 @@ const Create = () => {
               border: '1px solid rgba(255, 255, 255, 0.2)',
             }
           }}>
-            <TextField
-              fullWidth
-              label="Idea Statement"
-              value={problem}
-              onChange={(e) => setProblem(e.target.value)}
-              margin="normal"
-              multiline
-              rows={4}
-              sx={inputStyles}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <TextField
+                fullWidth
+                label="Idea Statement"
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
+                margin="normal"
+                multiline
+                rows={4}
+                sx={inputStyles}
+              />
+              <Tooltip title="Got a wild idea or a 'what if' moment? Jot it down here – big or small, crystal clear or delightfully vague!" arrow>
+                <IconButton size="small" sx={{ ml: 1, color: 'rgba(255, 255, 255, 0.7)' }}>
+                  <InfoOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
