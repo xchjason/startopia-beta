@@ -20,7 +20,7 @@ const ConsumerSegments = ({ segments }) => {
             cx="50%"
             cy="50%"
             outerRadius="80%"
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            label={({ name }) => `${name}`}
             labelLine={false}
           >
             {data.map((entry, index) => (
