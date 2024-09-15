@@ -439,16 +439,16 @@ const IdeaPage = () => {
             onToggle={() => setEvaluationExpanded(!evaluationExpanded)}
           />
           <ExpandableSection
-            title="Competition"
-            content={competitionContent}
-            isExpanded={competitionExpanded}
-            onToggle={() => setCompetitionExpanded(!competitionExpanded)}
-          />
-          <ExpandableSection
             title="Market"
             content={consumerContent}
             isExpanded={consumerExpanded}
             onToggle={() => setConsumerExpanded(!consumerExpanded)}
+          />
+          <ExpandableSection
+            title="Competition"
+            content={competitionContent}
+            isExpanded={competitionExpanded}
+            onToggle={() => setCompetitionExpanded(!competitionExpanded)}
           />
           <ExpandableSection
             title="Risk"
