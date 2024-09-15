@@ -1,6 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useQuery } from "convex/react";
+import { api } from "./convex/_generated/api";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -19,6 +21,32 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  return children;
+};
+
+const ProtectedIdeaRoute = ({ children }) => {
+  const { isAuthenticated, isLoading, user } = useAuth0();
+  const location = useLocation();
+  const { id } = useParams();
+
+  const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
+
+  if (isLoading || idea === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  if (idea === null) {
+    return <Navigate to="/portfolio" replace />;
+  }
+
+  if (idea.user_id !== user.sub) {
+    return <Navigate to="/portfolio" replace />;
   }
 
   return children;
@@ -44,9 +72,9 @@ const AppRoutes = ({ isAuthenticated }) => (
     <Route
       path="/idea/:id"
       element={
-        <ProtectedRoute>
+        <ProtectedIdeaRoute>
           <IdeaPage />
-        </ProtectedRoute>
+        </ProtectedIdeaRoute>
       }
     />
   </Routes>

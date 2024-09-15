@@ -226,22 +226,6 @@ const IdeaPage = () => {
     }
   };
 
-  if (!id) {
-    return <p className="text-center mt-20 text-white">No idea selected</p>;
-  }
-
-  if (idea === undefined) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (idea === null) {
-    return <p className="text-center mt-20 text-white">Idea not found</p>;
-  }
-
   const evaluationContent = evaluation ? (
     <div>
       <div className="mb-4 flex items-center space-x-4">
