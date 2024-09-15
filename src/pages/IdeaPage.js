@@ -8,6 +8,7 @@ import ScoreChart from '../components/idea/ScoreChart';
 import CompetitionChart from '../components/idea/CompetitionChart';
 import RiskMatrix from '../components/idea/RiskMatrix';
 import ConsumerSegments from '../components/idea/ConsumerSegments';
+import { CircularProgress } from '@mui/material';
 
 const IdeaPage = () => {
   const { id } = useParams();
@@ -251,11 +252,15 @@ const IdeaPage = () => {
     </div>
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400 flex items-center justify-center"
       onClick={evaluateIdea}
       disabled={isGeneratingEvaluation}
     >
-      {isGeneratingEvaluation ? 'Generating Evaluation...' : 'Evaluate Idea'}
+      {isGeneratingEvaluation ? (
+        <CircularProgress size={24} color="inherit" />
+      ) : (
+        'Evaluate Idea'
+      )}
     </button>
   );
 
@@ -287,11 +292,15 @@ const IdeaPage = () => {
     </div>
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400 flex items-center justify-center"
       onClick={generatePlan}
       disabled={isGeneratingPlan}
     >
-      {isGeneratingPlan ? 'Generating Plan...' : 'Generate Plan'}
+      {isGeneratingPlan ? (
+        <CircularProgress size={24} color="inherit" />
+      ) : (
+        'Generate Plan'
+      )}
     </button>
   );
 
@@ -299,11 +308,15 @@ const IdeaPage = () => {
     <CompetitionChart competitors={competitors} />
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400 flex items-center justify-center"
       onClick={generateCompetitors}
       disabled={isGeneratingCompetitors}
     >
-      {isGeneratingCompetitors ? 'Generating Competitors...' : 'Generate Competitors'}
+      {isGeneratingCompetitors ? (
+        <CircularProgress size={24} color="inherit" />
+      ) : (
+        'Generate Competitors'
+      )}
     </button>
   );
 
@@ -311,11 +324,15 @@ const IdeaPage = () => {
     <RiskMatrix risks={risks} title={`Risk Assessment Matrix`} />
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400 flex items-center justify-center"
       onClick={generateRiskAssessment}
       disabled={isGeneratingRisks}
     >
-      {isGeneratingRisks ? 'Generating Risk Assessment...' : 'Generate Risk Assessment'}
+      {isGeneratingRisks ? (
+        <CircularProgress size={24} color="inherit" />
+      ) : (
+        'Generate Risk Assessment'
+      )}
     </button>
   );
 
@@ -323,11 +340,15 @@ const IdeaPage = () => {
     <ConsumerSegments segments={consumers} />
   ) : (
     <button
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400"
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 disabled:bg-gray-400 flex items-center justify-center"
       onClick={generateConsumerSegments}
       disabled={isGeneratingConsumers}
     >
-      {isGeneratingConsumers ? 'Generating Target Customers...' : 'Generate Target Customers'}
+      {isGeneratingConsumers ? (
+        <CircularProgress size={24} color="inherit" />
+      ) : (
+        'Generate Target Customers'
+      )}
     </button>
   );
 
