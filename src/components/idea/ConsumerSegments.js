@@ -11,7 +11,8 @@ const ConsumerSegments = ({ segments }) => {
 
   return (
     <div className="h-96">
-      <ResponsiveContainer width="100%" height="100%">
+      <h2 className="text-xl font-semibold mb-4 text-center">Projected Customer Segmentation</h2>
+      <ResponsiveContainer width="100%" height="90%">
         <PieChart>
           <Pie
             data={data}
