@@ -24,10 +24,20 @@ const CompetitionChart = ({ competitors }) => {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-tooltip" style={{ backgroundColor: '#333', color: '#fff', padding: '10px', border: '1px solid #555' }}>
-          <p>{`${payload[0].payload.name}`}</p>
-          <p>{`Vision Completeness: ${payload[0].value}`}</p>
-          <p>{`Execution Ability: ${payload[1].value}`}</p>
+        <div className="custom-tooltip" style={{ 
+          backgroundColor: '#1A202C', 
+          color: '#E2E8F0', 
+          padding: '12px', 
+          borderRadius: '8px',
+          minWidth: '200px',
+          maxWidth: '300px',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word'
+        }}>
+          <p style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 8px 0' }}>{`${payload[0].payload.name}`}</p>
+          <p style={{ margin: '0 0 8px 0' }}><strong>Vision Completeness:</strong> {payload[0].value}</p>
+          <p style={{ margin: '0 0 8px 0' }}><strong>Execution Ability:</strong> {payload[1].value}</p>
         </div>
       );
     }
