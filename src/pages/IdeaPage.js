@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import ExpandableSection from '../components/idea/ExpandableSection';
@@ -11,6 +11,9 @@ import ConsumerSegments from '../components/idea/ConsumerSegments';
 
 const IdeaPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
+  const [editedIdea, setEditedIdea] = useState(null);
   const [evaluationExpanded, setEvaluationExpanded] = useState(false);
   const [planExpanded, setPlanExpanded] = useState(false);
   const [competitionExpanded, setCompetitionExpanded] = useState(false);
@@ -22,13 +25,15 @@ const IdeaPage = () => {
   const [consumerExpanded, setConsumerExpanded] = useState(false);
   const [isGeneratingConsumers, setIsGeneratingConsumers] = useState(false);
 
-
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
   const plan = useQuery(api.ideas.getPlan, { ideaId: id });
   const competitors = useQuery(api.ideas.getCompetitors, { ideaId: id });
   const risks = useQuery(api.ideas.getRisks, { ideaId: id });
   const consumers = useQuery(api.ideas.getConsumers, { ideaId: id });
+
+  const updateIdeaMutation = useMutation(api.ideas.updateIdea);
+  const resetIdeaMutation = useMutation(api.ideas.resetIdea);
 
   const evaluateIdeaAction = useAction(api.llm.evaluateIdea);
   const generatePlanAction = useAction(api.llm.generatePlan);
@@ -40,6 +45,54 @@ const IdeaPage = () => {
   const updateRisksMutation = useMutation(api.ideas.updateRisks);
   const generateConsumerSegmentsAction = useAction(api.llm.generateConsumerSegments);
   const updateConsumersMutation = useMutation(api.ideas.updateConsumers);
+
+  useEffect(() => {
+    if (idea) {
+      setEditedIdea(idea);
+    }
+  }, [idea]);
+
+  const handleEditToggle = () => {
+    setEditMode(!editMode);
+    if (!editMode) {
+      setEditedIdea(idea);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedIdea(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    if (!editedIdea) return;
+    await updateIdeaMutation({
+      ideaId: id,
+      user_id: editedIdea.user_id,
+      title: editedIdea.title,
+      category: editedIdea.category,
+      description: editedIdea.description,
+      problem: editedIdea.problem,
+      solution: editedIdea.solution,
+    });
+    setEditMode(false);
+  };
+
+  const handleReset = async () => {
+    if (!editedIdea) return;
+    await resetIdeaMutation({
+      ideaId: id,
+      user_id: editedIdea.user_id,
+    });
+    setEditMode(false);
+    // Refresh the page to reflect the changes
+    navigate(0);
+  };
+
+  const handleCancel = () => {
+    setEditedIdea(idea);
+    setEditMode(false);
+  };
 
   const evaluateIdea = async () => {
     if (!idea) return;
@@ -268,7 +321,72 @@ const IdeaPage = () => {
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <IdeaDetails idea={idea} />
+        <div>
+          {editMode ? (
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg h-fit">
+              <input
+                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
+                name="title"
+                value={editedIdea.title}
+                onChange={handleInputChange}
+              />
+              <input
+                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
+                name="category"
+                value={editedIdea.category}
+                onChange={handleInputChange}
+              />
+              <textarea
+                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
+                name="description"
+                value={editedIdea.description}
+                onChange={handleInputChange}
+              />
+              <textarea
+                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
+                name="problem"
+                value={editedIdea.problem}
+                onChange={handleInputChange}
+              />
+              <textarea
+                className="w-full bg-gray-700 text-white p-2 rounded mb-4"
+                name="solution"
+                value={editedIdea.solution}
+                onChange={handleInputChange}
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  className="px-4 py-2 bg-green-600 text-white rounded"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  className="px-4 py-2 bg-yellow-600 text-white rounded"
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-600 text-white rounded"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="relative">
+              <IdeaDetails idea={idea} />
+              <button
+                className="mt-4 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded absolute bottom-2 right-2 transition-colors duration-200"
+                onClick={handleEditToggle}
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
         <div>
           <ExpandableSection
             title="Evaluation"

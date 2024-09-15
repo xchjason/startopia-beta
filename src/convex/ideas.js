@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+
 // Mutation to create a new idea
 export const createIdea = mutation({
   args: {
@@ -41,9 +42,11 @@ export const updateIdea = mutation({
     problem: v.optional(v.string()),
     solution: v.optional(v.string()),
     category: v.optional(v.string()),
-    score_id: v.optional(v.string()),
-    plan_id: v.optional(v.string()),
-    competitors: v.optional(v.string()),
+    score_id: v.optional(v.union(v.string(), v.null())),
+    plan_id: v.optional(v.union(v.string(), v.null())),
+    competitors: v.optional(v.union(v.string(), v.null())),
+    risk: v.optional(v.union(v.string(), v.null())),
+    consumers: v.optional(v.union(v.string(), v.null())),
   },
   handler: async (ctx, args) => {
     const { ideaId, user_id, ...updates } = args;
@@ -60,6 +63,46 @@ export const updateIdea = mutation({
 
     return await ctx.db.patch(ideaId, filteredUpdates);
   }
+});
+
+// New mutation to reset an idea
+export const resetIdea = mutation({
+  args: {
+    ideaId: v.id("ideas"),
+    user_id: v.string(),
+  },
+  handler: async (ctx, { ideaId, user_id }) => {
+    const idea = await ctx.db.get(ideaId);
+
+    if (!idea) {
+      throw new Error("Idea not found");
+    }
+
+    if (idea.user_id !== user_id) {
+      throw new Error("Unauthorized: You can only reset your own ideas.");
+    }
+
+    // Remove related data from scores table
+    if (idea.score_id) {
+      await ctx.db.delete(idea.score_id);
+    }
+
+    // Remove related data from plans table
+    if (idea.plan_id) {
+      await ctx.db.delete(idea.plan_id);
+    }
+
+    // Update the idea, removing all related fields
+    await ctx.db.patch(ideaId, {
+      score_id: undefined,
+      plan_id: undefined,
+      competitors: undefined,
+      risk: undefined,
+      consumers: undefined,
+    });
+
+    return ideaId;
+  },
 });
 
 // Mutation to delete an idea
