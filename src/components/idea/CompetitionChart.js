@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { FaQuestionCircle } from 'react-icons/fa';
 
 const CompetitionChart = ({ competitors }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   if (!competitors || competitors.length === 0) {
     return <p>No competition data available.</p>;
   }
@@ -88,15 +90,35 @@ const CompetitionChart = ({ competitors }) => {
           )}
         </ScatterChart>
       </ResponsiveContainer>
-      <a 
-        href="https://www.gartner.com/en/research/methodologies/magic-quadrants-research" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer z-10"
-        title="Learn about Magic Quadrant methodology"
-      >
-        <FaQuestionCircle size={20} />
-      </a>
+      <div className="absolute top-2 right-2 z-10">
+        <a 
+          href="https://www.gartner.com/en/research/methodologies/magic-quadrants-research" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-gray-100 cursor-pointer"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <FaQuestionCircle size={20} />
+        </a>
+        {showTooltip && (
+          <div 
+            className="absolute right-0 mt-1 p-3 rounded-lg shadow-lg"
+            style={{
+              backgroundColor: '#1A202C',
+              color: '#E2E8F0',
+              minWidth: '200px',
+              maxWidth: '300px',
+              fontSize: '14px',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word'
+            }}
+          >
+            Gartner Magic Quadrant, click to learn more
+          </div>
+        )}
+      </div>
     </div>
   );
 };
