@@ -24,6 +24,7 @@ const IdeaPage = () => {
   const [isGeneratingRisks, setIsGeneratingRisks] = useState(false);
   const [consumerExpanded, setConsumerExpanded] = useState(false);
   const [isGeneratingConsumers, setIsGeneratingConsumers] = useState(false);
+  const deleteIdeaMutation = useMutation(api.ideas.deleteIdea);
 
   const idea = useQuery(api.ideas.getIdeaById, { ideaId: id });
   const evaluation = useQuery(api.ideas.getEvaluation, { ideaId: id });
@@ -209,6 +210,18 @@ const IdeaPage = () => {
       console.error("Error generating consumer segments:", error);
     } finally {
       setIsGeneratingConsumers(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this idea? This action cannot be undone.")) {
+      try {
+        await deleteIdeaMutation({ ideaId: id });
+        navigate('/ideas'); // Redirect to the ideas list page after deletion
+      } catch (error) {
+        console.error("Error deleting idea:", error);
+        alert("Failed to delete the idea. Please try again.");
+      }
     }
   };
 
@@ -401,12 +414,20 @@ const IdeaPage = () => {
           ) : (
             <div className="relative">
               <IdeaDetails idea={idea} />
-              <button
-                className="mt-4 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded absolute bottom-2 right-2 transition-colors duration-200"
-                onClick={handleEditToggle}
-              >
-                Edit
-              </button>
+              <div className="absolute bottom-2 right-2 space-x-2">
+                <button
+                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded transition-colors duration-200"
+                  onClick={handleEditToggle}
+                >
+                  Edit
+                </button>
+                <button
+                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors duration-200"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -105,11 +105,29 @@ export const resetIdea = mutation({
   },
 });
 
-// Mutation to delete an idea
+// Mutation to delete an idea and its associated data
 export const deleteIdea = mutation({
   args: { ideaId: v.id("ideas") },
   handler: async (ctx, { ideaId }) => {
-    return await ctx.db.delete(ideaId);
+    const idea = await ctx.db.get(ideaId);
+    if (!idea) {
+      throw new Error("Idea not found");
+    }
+
+    // Delete associated score if it exists
+    if (idea.score_id) {
+      await ctx.db.delete(idea.score_id);
+    }
+
+    // Delete associated plan if it exists
+    if (idea.plan_id) {
+      await ctx.db.delete(idea.plan_id);
+    }
+
+    // Delete the idea itself
+    await ctx.db.delete(ideaId);
+
+    return ideaId;
   }
 });
 
