@@ -120,8 +120,8 @@ const RiskMatrix = ({ risks, title }) => {
           if (cell.data.y !== '') {
             const risk = cell.data.risk;
             const score = risk.impact * risk.likelihood;
-            if (score > 9) return "#ff6666";
-            if (score > 4) return "#ffcc66";
+            if (score > 6) return "#ff6666";
+            if (score > 3) return "#ffcc66";
             return "#66cc66";
           }
           return '#1A202C'; // Changed to match tooltip background color
