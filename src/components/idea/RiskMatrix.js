@@ -124,9 +124,9 @@ const RiskMatrix = ({ risks, title }) => {
             if (score > 4) return "#ffcc66";
             return "#66cc66";
           }
-          return '#666666'; // Slightly lighter gray for empty cells
+          return '#1A202C'; // Changed to match tooltip background color
         }}
-        emptyColor="#666666" // Slightly lighter gray for empty cells
+        emptyColor="#1A202C" // Changed to match tooltip background color
         borderColor="#000000"
         borderWidth={1}
         enableLabels={true}
