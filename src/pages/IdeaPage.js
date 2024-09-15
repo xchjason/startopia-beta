@@ -217,7 +217,7 @@ const IdeaPage = () => {
     if (window.confirm("Are you sure you want to delete this idea? This action cannot be undone.")) {
       try {
         await deleteIdeaMutation({ ideaId: id });
-        navigate('/ideas'); // Redirect to the ideas list page after deletion
+        navigate('/portfolio'); // Redirect to the portfolio page after deletion
       } catch (error) {
         console.error("Error deleting idea:", error);
         alert("Failed to delete the idea. Please try again.");
