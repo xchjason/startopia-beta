@@ -156,7 +156,7 @@ const Create = () => {
                 rows={4}
                 sx={inputStyles}
               />
-              <Tooltip title="Enter a problem you want to solve, a demand you observe, a product you'd like to create, or anything else that inspires you!" arrow>
+              <Tooltip title="Enter a product you'd like to create, a problem you want to solve, a demand you observe, or anything else that inspires you!" arrow>
                 <IconButton size="small" sx={{ ml: 1, color: 'rgba(255, 255, 255, 0.7)' }}>
                   <HelpOutlineIcon />
                 </IconButton>
