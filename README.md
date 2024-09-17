@@ -32,8 +32,9 @@ Startopia democratizes startup incubation by integrating LLM intelligence with m
 
 1. Enter a basic idea statement with parameters (technical complexity, target market size, initial funding)
 2. Startopia generates three tailored startup ideas
-3. Review and compare generated ideas
-4. Save, edit, or reset ideas as needed
+3. Review and compare generated ideas in Portfolio page
+4. Automate business analytics in Idea page
+5. Save, edit, or reset ideas as needed
 
 ## The Power of Convex
 
