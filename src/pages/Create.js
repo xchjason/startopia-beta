@@ -16,7 +16,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useAction, useMutation, useQuery } from "convex/react"; 
 import { api } from "../convex/_generated/api";
 import CreateCard from "../components/card/CreateCard";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const Create = () => {
@@ -159,7 +158,7 @@ const Create = () => {
               />
               <Tooltip title="Enter a problem you want to solve, a demand you observe, a product you'd like to create, or anything else that inspires you!" arrow>
                 <IconButton size="small" sx={{ ml: 1, color: 'rgba(255, 255, 255, 0.7)' }}>
-                  <InfoOutlinedIcon />
+                  <HelpOutlineIcon />
                 </IconButton>
               </Tooltip>
             </Box>
