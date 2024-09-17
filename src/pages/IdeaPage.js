@@ -82,7 +82,7 @@ const IdeaPage = () => {
 
   const handleReset = async () => {
     if (!editedIdea) return;
-    if (window.confirm("Are you sure you want to reset this idea? This will delete all previously generated content (evaluation, plan, competitors, risks, and consumer segments). This action cannot be undone.")) {
+    if (window.confirm("Are you sure you want to reset this idea? This will save the idea details but delete all previously generated content such as Evaluation and Plan. This action cannot be undone.")) {
       await resetIdeaMutation({
         ideaId: id,
         user_id: editedIdea.user_id,
