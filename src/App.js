@@ -67,8 +67,22 @@ const AppRoutes = ({ isAuthenticated }) => (
         </ProtectedRoute>
       }
     />
-    <Route path="/create" element={<Create />} />
-    <Route path="/portfolio" element={<Portfolio />} />
+    <Route
+      path="/create"
+      element={
+        <ProtectedRoute>
+          <Create />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/portfolio"
+      element={
+        <ProtectedRoute>
+          <Portfolio />
+        </ProtectedRoute>
+      }
+    />
     <Route
       path="/idea/:id"
       element={
