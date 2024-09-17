@@ -17,6 +17,7 @@ import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import CreateCard from "../components/card/CreateCard";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const Create = () => {
   const { user } = useAuth0();
@@ -156,7 +157,7 @@ const Create = () => {
                 rows={4}
                 sx={inputStyles}
               />
-              <Tooltip title="Got a wild idea or a 'what if' moment? Jot it down here – big or small, crystal clear or delightfully vague!" arrow>
+              <Tooltip title="Enter a problem you want to solve, a demand you observe, a product you'd like to create, or anything else that inspires you!" arrow>
                 <IconButton size="small" sx={{ ml: 1, color: 'rgba(255, 255, 255, 0.7)' }}>
                   <InfoOutlinedIcon />
                 </IconButton>
@@ -191,7 +192,12 @@ const Create = () => {
             justifyContent: 'space-between',
           }}>
             <Box>
-              <Typography gutterBottom sx={{ color: 'white' }}>Technical Complexity</Typography>
+              <Typography gutterBottom sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
+                Technical Complexity
+                <Tooltip title="Set desired technological sophistication: 1 (simple) to 10 (groundbreaking)" arrow>
+                  <HelpOutlineIcon sx={{ ml: 1, fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }} />
+                </Tooltip>
+              </Typography>
               <Slider
                 value={technicalComplexity}
                 onChange={(e, newValue) => setTechnicalComplexity(newValue)}
@@ -204,7 +210,12 @@ const Create = () => {
               />
             </Box>
             <Box>
-              <Typography gutterBottom sx={{ color: 'white' }}>Market Size</Typography>
+              <Typography gutterBottom sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
+                Market Size
+                <Tooltip title="Set target market size: 1 (niche) to 10 (mass market)" arrow>
+                  <HelpOutlineIcon sx={{ ml: 1, fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }} />
+                </Tooltip>
+              </Typography>
               <Slider
                 value={marketSize}
                 onChange={(e, newValue) => setMarketSize(newValue)}
@@ -217,7 +228,12 @@ const Create = () => {
               />
             </Box>
             <Box>
-              <Typography gutterBottom sx={{ color: 'white' }}>Initial Funding</Typography>
+              <Typography gutterBottom sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
+                Initial Funding
+                <Tooltip title="Set available capital size: 1 (bootstrap) to 10 (major investment)" arrow>
+                  <HelpOutlineIcon sx={{ ml: 1, fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }} />
+                </Tooltip>
+              </Typography>
               <Slider
                 value={initialFunding}
                 onChange={(e, newValue) => setInitialFunding(newValue)}
