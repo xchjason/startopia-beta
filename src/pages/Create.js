@@ -140,7 +140,10 @@ const Create = () => {
             '&:hover': {
               boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
-            }
+            },
+            height: '100%', // Ensure full height
+            display: 'flex',
+            flexDirection: 'column',
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <TextField
@@ -159,6 +162,16 @@ const Create = () => {
                 </IconButton>
               </Tooltip>
             </Box>
+            <Box mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button 
+                onClick={handleGenerate} 
+                variant="contained" 
+                color="primary"
+                disabled={isLoading}
+              >
+                {isLoading ? <CircularProgress size={24} /> : "Generate Ideas"}
+              </Button>
+            </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -171,9 +184,13 @@ const Create = () => {
             '&:hover': {
               boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
-            }
+            },
+            height: '100%', // Ensure full height
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           }}>
-            <Box mt={2}>
+            <Box>
               <Typography gutterBottom sx={{ color: 'white' }}>Technical Complexity</Typography>
               <Slider
                 value={technicalComplexity}
@@ -186,7 +203,7 @@ const Create = () => {
                 sx={{ color: 'white' }}
               />
             </Box>
-            <Box mt={2}>
+            <Box>
               <Typography gutterBottom sx={{ color: 'white' }}>Market Size</Typography>
               <Slider
                 value={marketSize}
@@ -199,7 +216,7 @@ const Create = () => {
                 sx={{ color: 'white' }}
               />
             </Box>
-            <Box mt={2}>
+            <Box>
               <Typography gutterBottom sx={{ color: 'white' }}>Initial Funding</Typography>
               <Slider
                 value={initialFunding}
@@ -215,16 +232,6 @@ const Create = () => {
           </Paper>
         </Grid>
       </Grid>
-      <Box mt={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Button 
-          onClick={handleGenerate} 
-          variant="contained" 
-          color="primary"
-          disabled={isLoading}
-        >
-          {isLoading ? <CircularProgress size={24} /> : "Generate Ideas"}
-        </Button>
-      </Box>
       {ideas.length > 0 && (
         <Box mt={4}>
           <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
