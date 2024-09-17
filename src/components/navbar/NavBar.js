@@ -40,13 +40,11 @@ export const NavBar = ({ currentUser }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-12">
             <NavLogo />
-            <div className="hidden md:block">{currentUser && <NavLinks />}</div>
+            {currentUser && <div className="hidden md:block"><NavLinks /></div>}
           </div>
           {currentUser ? <NavAccount /> : <NavCTAs />}
         </div>
-        <div className="block pt-1.5 md:hidden">
-          <NavLinks />
-        </div>
+        {currentUser && <div className="block pt-1.5 md:hidden"><NavLinks /></div>}
       </MaxWidthWrapper>
     </motion.nav>
   );
