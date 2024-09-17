@@ -82,13 +82,15 @@ const IdeaPage = () => {
 
   const handleReset = async () => {
     if (!editedIdea) return;
-    await resetIdeaMutation({
-      ideaId: id,
-      user_id: editedIdea.user_id,
-    });
-    setEditMode(false);
-    // Refresh the page to reflect the changes
-    navigate(0);
+    if (window.confirm("Are you sure you want to reset this idea? This will delete all previously generated content (evaluation, plan, competitors, risks, and consumer segments). This action cannot be undone.")) {
+      await resetIdeaMutation({
+        ideaId: id,
+        user_id: editedIdea.user_id,
+      });
+      setEditMode(false);
+      // Refresh the page to reflect the changes
+      navigate(0);
+    }
   };
 
   const handleCancel = () => {
