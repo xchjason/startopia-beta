@@ -46,10 +46,6 @@ Startopia leverages Convex for:
 - Efficient database operations
 - Automatic scalability
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
